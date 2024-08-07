@@ -1,20 +1,16 @@
 import express from "express";
-import { Pool } from "pg";
-const bodyParser = require('body-parser');
-const cors = require('cors');
-require('dotenv').config();
 
-const app = express();
-const port = process.env.PORT || 3000;
+const app = express()
+const PORT = 8000
 
-// Middleware
-app.use(bodyParser.json());
+import {config} from './db.js'
+
+import pkg from 'pg'
+const {Client} = pkg;
+
+import cors from 'cors'
 app.use(cors());
 
-// Iniciar el servidor
-app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${port}`);
-});
-
-//Usuario
-app.get("/registro",usuario.getUsuario)
+app.get('/', (req, res) => {
+    res.send('Hello World')
+  })
