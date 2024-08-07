@@ -1,10 +1,14 @@
-import pg from 'pg'
+//export POSTGRES_HOST=ep-blue-feather-a4ve7rp2.us-east-1.aws.neon.tech
+// export POSTGRES_USER=default
+// export POSTGRES_PASSWORD=xxxxx
+// 
 
-const config = {
-  user: 'default',
-  password: 'DaUg4zjXY6rq',
-  host: 'ep-cool-leaf-a4pb9z2z.us-east-1.aws.neon.tech',
-  database: 'CentinelAi',
-  port: 5432,
-};
-export const conn = new pg.Pool(config);
+
+export const config = {
+  host :process.env.POSTGRES_HOST,
+  database:"CentinelAi_Database",
+  user:process.env.POSTGRES_USER,
+  password:process.env.POSTGRES_PASSWORD,
+  port:5432,
+  ssl: true
+}
