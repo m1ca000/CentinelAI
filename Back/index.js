@@ -1,20 +1,26 @@
 import express from "express";
+import cors from 'cors'
 
 const app = express()
 const PORT = 8000
 
-import {config} from './db.js'
-
-import pkg from 'pg'
-const {Client} = pkg;
-
-import cors from 'cors'
+// Middlewares
 app.use(cors());
+app.use(express.json());
 
+//Iniciar el servidor
+app.listen(PORT, () => {
+    console.log(`✅ Server is running on port ${PORT}`);
+})
+
+//Prueba
 app.get('/', (req, res) => {
     res.send('Hello World')
 })
 
-app.listen(PORT, () => {
-    console.log(`✅ Server is running on port ${PORT}`);
-  })
+//Rutas
+import user from "./Controllers/user.js";
+
+//User
+app.post('/register', user.register)
+
