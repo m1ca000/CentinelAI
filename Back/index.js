@@ -1,6 +1,11 @@
 import express from "express";
 import cors from 'cors'
 
+app.use(cors({
+    origin: '*',
+    credentials: true
+  }));
+
 const app = express()
 const PORT = 8000
 
