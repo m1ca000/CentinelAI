@@ -4,6 +4,11 @@ import cors from 'cors'
 const app = express()
 const PORT = 8000
 
+app.use(cors({
+    origin: '*',
+    credentials: true
+  }));
+
 // Middlewares
 app.use(cors());
 app.use(express.json());
@@ -22,5 +27,5 @@ app.get('/', (req, res) => {
 import user from "./Controllers/user.js";
 
 //User
-app.post('/register', user.register)
+app.post('/api/register', user.register)
 
