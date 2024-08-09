@@ -22,5 +22,5 @@ app.get('/', (req, res) => {
 import user from "./Controllers/user.js";
 
 //User
-app.post('/register', user.register)
+app.post('/api/register', user.register)
 
