@@ -28,4 +28,4 @@ import user from "./Controllers/user.js";
 
 //User
 app.post('/api/register', user.register)
-
+app.post('/api/login', user.login)
