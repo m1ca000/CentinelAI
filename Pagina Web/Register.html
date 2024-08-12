@@ -1,41 +1,51 @@
-﻿<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
+﻿    <meta charset="utf-8" />
     <title>CentinelAI Register</title>
     <link rel="stylesheet" href="RegisterStyle.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-</head>
-<body>
-    <div class="wrapper">
-        <form action="" onsubmit="return checkPass()">
-            <h1>Create an Account</h1>
-            <div class="input-box">
-                <input type="text" placeholder="Username" required>
-                <i class='bx bx-user'></i>
-            </div>
-            <div class="input-box">
-                <input type="text" placeholder="E-Mail" required>
-                <i class='bx bx-user'></i>
-            </div>
-            <div class="input-box">
-                <input type="password" placeholder="Password" id="passwordId" required>
-                <i class='bx bx-lock'></i>
-                <b>
-                    <i class='bx bx-hide' id="passIconId" onclick="showPass()"></i>
-                </b>
-            </div>
-            <div class="input-box">
-                <input type="password" placeholder="Repeat Password" id="checkPasswordId" required>
-                <i class='bx bx-lock'></i>
-            </div>
-            <p id="error-message" style="color: red; display: none;">Passwords don't match</p>
-            <button type="submit" class="btn">Register</button>
-            <div class="register-link">
-                <p>Already have an account? <a href="Login.html">Login</a></p>
-            </div>
-        </form>
-    </div>
-    <script src="Functions.js"></script>
-</body>
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>CentinelAI Register</title>
+        <link rel="stylesheet" href="RegisterStyle.css">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    </head>
+    <body>
+        <div class="wrapper">
+            <form id="register">
+                <h1>Create an Account</h1>
+                <div class="input-box">
+                    <input type="text" placeholder="Username" id="usernameId" required>
+                    <i class='bx bx-user'></i>
+                    <p class="alert username" style="display:none;">Must be between 4-25 characters long</p>
+                    <p class="alert2 username" style="display:none;">Name already in use</p>
+                </div>
+                <div class="input-box">
+                    <input type="text" placeholder="E-Mail" id="emailId" required>
+                    <i class='bx bx-user'></i>
+                    <p class="alert email" style="display:none;">Must be a valid email address</p>
+                    <p class="alert2 email" style="display:none;">E-mail already in use</p>
+                </div>
+                <div class="input-box">
+                    <input type="password" placeholder="Password" id="passwordId" required>
+                    <i class='bx bx-lock'></i>
+                    <b>
+                        <i class='bx bx-hide' id="passIconId" onclick="showPass()"></i>
+                    </b>
+                </div>
+                <div class="input-box">
+                    <input type="password" placeholder="Repeat Password" id="checkPasswordId" required>
+                    <i class='bx bx-lock'></i>
+                </div>
+                <p id="error-message" style="color: red; display: none;">Passwords don't match</p>
+                <button type="submit" class="btn">Register</button>
+                <div class="register-link">
+                    <p>Already have an account? <a href="Login.html">Login</a></p>
+                </div>
+            </form>
+        </div>
+
+        <script src="Functions.js"></script>
+    </body>
 </html>
+

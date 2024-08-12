@@ -62,6 +62,21 @@ body {
     font-size: 20px;
 }
 
+.input-box .alert{
+    display: none;
+    position: absolute;
+    font-size: 14px;
+    font-weight:200;
+    color: red;
+}
+.input-box .alert2 {
+    display: none;
+    position: absolute;
+    font-size: 14px;
+    font-weight: 200;
+    color: red;
+}
+
 .input-box b {
     position: absolute;
     right: 19px;
