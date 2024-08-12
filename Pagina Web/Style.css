@@ -77,6 +77,10 @@ body {
     color: red;
 }
 
+.wrapper .dialog{
+    
+}
+
 .input-box b {
     position: absolute;
     right: 19px;

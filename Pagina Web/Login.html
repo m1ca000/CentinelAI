@@ -3,16 +3,17 @@
 <head>
     <meta charset="utf-8" />
     <title>CentinelAI Login</title>
-    <link rel="stylesheet" href="LoginStyle.css">
+    <link rel="stylesheet" href="Style.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
     <div class="wrapper">
-        <form action="">
+        <form id="login">
             <h1>Login</h1>
             <div class="input-box">
-                <input type="text" placeholder="Username" required>
+                <input type="text" placeholder="Username" id="usernameId" required>
                 <i class='bx bx-user'></i>
+                <p class="alert" style="display:none;">Invalid username</p>
             </div>
             <div class="input-box">
                 <input type="password" placeholder="Password" id="passwordId" required>
@@ -20,6 +21,7 @@
                 <b>
                     <i class='bx bx-hide' id="passIconId" onclick="showPass()"></i>
                 </b>
+                <p class="alert" style="display:none;">Invalid password</p>
             </div>
                 <div class="remember-forgot">
                     <label><input type="checkbox">Remember me</label>
@@ -29,8 +31,13 @@
                 <div class="register-link">
                     <p>Don't have an account? <a href="Register.html">Register</a></p>
                 </div>
+                <dialog class="dialog" id="dialog">
+                    <p>E-mail sent</p>
+                    <p>Enter code recieved:</p>
+                    <input type="text" required></input>
+                </dialog>
 </form>
     </div>
-    <script src="Functions.js"></script>
+    <script src="FunctionsL.js"></script>
 </body>
 </html>

@@ -15,41 +15,77 @@ function showPass() {
         x.type = "password";
         y.type = "password";
         i.classList.remove('bx-show');
-        i.classList.add('bx bx-hide');
+        i.classList.add('bx-hide');
     }
 }
 
 function checkMail() {
     var email = document.getElementById("emailId").value;
-    var alert = document.querySelector(".alert.email");
-    var alert2 = document.querySelector(".alert2.email");
+    var alert = document.querySelector(".alert");
+    var alert2 = document.querySelector(".alert2");
 
     var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     if (!emailPattern.test(email)) {
         alert.style.display = 'block';
         isEmailOk = false;
     } else {
-        alert.style.display = 'none';
-        alert2.style.display = 'none';
-        isEmailOk = true;
+        fetch('https://centinel-ai.vercel.app/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    alert2.style.display = 'block';
+                    isEmailOk = false;
+                } else {
+                    alert.style.display = 'none';
+                    alert2.style.display = 'none';
+                isEmailOk = true;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
     return isEmailOk;
 }
 
 function checkUsername() {
     var username = document.getElementById("usernameId").value;
-    var alert = document.querySelector(".alert.username");
-    var alert2 = document.querySelector(".alert2.username");
+    var alert = document.querySelector(".alert");
+    var alert2 = document.querySelector(".alert2");
 
     if (username.length > 25 || username.length < 4) {
         alert.style.display = 'block';
         isUsernameOk = false;
     } else {
-        alert.style.display = 'none';
-        alert2.style.display = 'none';
-        isUsernameOk = true;
+        fetch('https://centinel-ai.vercel.app/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    alert2.style.display = 'block';
+                    isUsernameOk = false;
+                } else {
+                    alert.style.display = 'none';
+                    alert2.style.display = 'none';
+                    isUsernameOk = true;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
-    return isUsernameOk;
+    return isUsernameOk;
 }
 
 function checkPass() {
@@ -91,14 +127,12 @@ function registerUser() {
                 console.error('Error:', error);
                 console.error('Status:', error.status);
                 console.error('Status Text:', error.statusText);
-                console.log("mama")
             });
     }
-    else{console.log("papa")}
 }
 
-function onSubmit(e){
-    console.log("AAAAAAAA")
+function onRegisterSubmit(e){
+    console.log("Submited")
     e.preventDefault();
 
     checkPass();
@@ -108,12 +142,8 @@ function onSubmit(e){
     registerUser();
 }
 
-function LoadLogin() {
-    window.location.href = 'Login.html';
-}
-
 document.addEventListener("DOMContentLoaded", () => {
     const registerForm = document.getElementById("register");
-
-    registerForm.addEventListener("submit", onSubmit);
+    
+    registerForm.addEventListener("submit", onRegisterSubmit);
 })
