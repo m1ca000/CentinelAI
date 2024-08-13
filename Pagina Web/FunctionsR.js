@@ -28,30 +28,7 @@ function checkMail() {
     if (!emailPattern.test(email)) {
         alert.style.display = 'block';
         isEmailOk = false;
-    } else {
-        fetch('https://centinel-ai.vercel.app/api/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.exists) {
-                    alert2.style.display = 'block';
-                    isEmailOk = false;
-                } else {
-                    alert.style.display = 'none';
-                    alert2.style.display = 'none';
-                isEmailOk = true;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
     }
-    return isEmailOk;
 }
 
 function checkUsername() {
@@ -62,30 +39,7 @@ function checkUsername() {
     if (username.length > 25 || username.length < 4) {
         alert.style.display = 'block';
         isUsernameOk = false;
-    } else {
-        fetch('https://centinel-ai.vercel.app/api/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.exists) {
-                    alert2.style.display = 'block';
-                    isUsernameOk = false;
-                } else {
-                    alert.style.display = 'none';
-                    alert2.style.display = 'none';
-                    isUsernameOk = true;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
     }
-    return isUsernameOk;
 }
 
 function checkPass() {
@@ -113,7 +67,6 @@ function registerUser() {
     var email = document.getElementById('emailId').value;
     var password = document.getElementById('passwordId').value;
 
-    if (isEmailOk && isPassOk && isUsernameOk) {
         fetch('https://centinel-ai.vercel.app/api/register', {
             method: 'POST',
             headers: {
@@ -127,8 +80,7 @@ function registerUser() {
                 console.error('Error:', error);
                 console.error('Status:', error.status);
                 console.error('Status Text:', error.statusText);
-            });
-    }
+            });   
 }
 
 function onRegisterSubmit(e){

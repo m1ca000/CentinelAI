@@ -9,6 +9,20 @@ function onLoginSubmit(e){
     loginUser();
 }
 
+function showPass() {
+    var x = document.getElementById("passwordId");
+    var i = document.getElementById("passIconId");
+    if (x.type === "password") {
+        x.type = "text";
+        i.classList.remove('bx-show');
+        i.classList.add('bx-show');
+    } else {
+        x.type = "password";
+        i.classList.remove('bx-show');
+        i.classList.add('bx-hide');
+    }
+}
+
 function LoadLogin() {
     window.location.href = 'Login.html';
 }
@@ -19,40 +33,13 @@ function checkLogin(){
 
     var alert = document.querySelector(".alert");
 
-    fetch('https://centinel-ai.vercel.app/api/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({username, password})
-    })
-    .then(response => response.text())
-    .then(message => console.log(message))
-    .then(data=> {
-        if(password != data.password){
-            canLogin = false;
-            alert.style.display = "block";
-        }
-        else if (username != data.username){
-            canLogin = false;
-            alert.style.display = "block";
-        }
-        else{ canLogin = true;}
-        alert.style.display = "none";
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        console.error('Status:', error.status);
-        console.error('Status Text:', error.statusText);
-    });
 
-    return canLogin;
 }
 
 function loginUser(){
-    if (canLogin){
+        var dialogBox = document.getElementById("centerpoint");
 
-    }
+        dialogBox.style.display = 'block';
 }
 
 function showMessage(){
@@ -64,3 +51,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loginForm.addEventListener("submit", onLoginSubmit);
 })
+
+function resendMail(){
+    preventDefault();
+}
+
+function clickEvent(first, last) {
+    first.value = first.value.replace(/[^0-9]/g, '');
+  
+    if (first.value.length) {
+      document.getElementById(last).focus();
+    }
+  }
