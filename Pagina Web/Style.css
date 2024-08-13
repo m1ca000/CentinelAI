@@ -62,14 +62,29 @@ body {
     font-size: 20px;
 }
 
-.input-box .alert{
+.input-box .alertUsername{
     display: none;
     position: absolute;
     font-size: 14px;
     font-weight:200;
     color: red;
 }
-.input-box .alert2 {
+.input-box .alertUsername2 {
+    display: none;
+    position: absolute;
+    font-size: 14px;
+    font-weight: 200;
+    color: red;
+}
+
+.input-box .alertEmail{
+    display: none;
+    position: absolute;
+    font-size: 14px;
+    font-weight:200;
+    color: red;
+}
+.input-box .alertEmail2 {
     display: none;
     position: absolute;
     font-size: 14px;
@@ -78,7 +93,7 @@ body {
 }
 
 #centerpoint {
-    display: block;
+    display: none;
     
     position: absolute;
     width: 300px;
