@@ -15,11 +15,20 @@ const register = async (req, res) => {
         const emailValues = [email];
         const result = await client.query(emailQuery, emailValues);
         if (result.rows[0] == null){
-            const query = 'INSERT INTO "user"("email", "username", "password") VALUES($1, $2, $3)';
-            const values = [email, username, password];
-            await client.query(query, values);
-            await client.end();
-            res.status(201).send('Usuario registrado con éxito');
+            const userQuery = 'SELECT "username" FROM "user" WHERE "username" = $1'
+            const userValues = [username];
+            const result2 = await client.query(userQuery, userValues);
+            if(result2.rows[0] == null){
+                const query = 'INSERT INTO "user"("email", "username", "password") VALUES($1, $2, $3)';
+                const values = [email, username, password];
+                await client.query(query, values);
+                await client.end();
+                res.status(201).send('Usuario registrado con éxito');
+            }
+            else{
+                res.status(400).send('Este nombre ya se encuentra en uso');
+                await client.end();
+            }
         }
         else {
             res.status(400).send('Este email ya se encuentra en uso');
