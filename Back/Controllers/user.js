@@ -68,11 +68,38 @@ const login = async (req, res) => {
         await client.end();
         res.status(500).send('Error al iniciar sesión');
     }
-}
+};
+
+const updatePassword = async (req, res) => {
+    console.log('Restaurar password');
+    await client.connect();
+    console.log('Conectado');
+    const { email, password } = req.body;
+    try {
+        const query = 'SELECT "email", "password" FROM "user" WHERE "email" = $1';
+        const values = [email];
+        await client.query(query, values);
+        const result = await client.query(query, values);
+        if(result.rows.length > 0) {
+            const queryPass = 'UPDATE "user" SET "password" = $1 WHERE "email" = $2';
+            const valuesPass = [password, email];
+            await client.query(queryPass, valuesPass);
+            console.log("body", req.body)
+            await client.end();
+            res.status(201).send('Contraseña modificada con exito');
+        }
+    }
+    catch {
+        console.error(err);
+        await client.end();
+        res.status(500).send('Error al modificar contraseña');
+    }
+};
 
 const user = {
     register,
     login,
+    updatePassword,
 };
 
 export default user;
