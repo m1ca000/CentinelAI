@@ -29,11 +29,29 @@ function checkMail() {
         alert.style.display = 'block';
         isEmailOk = false;
     }
-    if(usernameInUse){
+    if(emailInUse(b)){
         alert2.style.display = 'block';
         isEmailOk = false;
     }
+    else isEmailOk = true;
     return isEmailOk;
+}
+
+function emailInUse(b){
+    fetch('https://centinel-ai.vercel.app/api/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+    })
+        .then(response => response.text())
+        .then(message => console.log(message))
+        .catch(error => {
+            console.error('Error:', error);
+            console.error('Status:', error.status);
+            console.error('Status Text:', error.statusText);
+        });   
 }
 
 function checkUsername() {
@@ -45,11 +63,29 @@ function checkUsername() {
         alert.style.display = 'block';
         isUsernameOk = false;
     }
-    if(usernameInUse){
+    if(usernameInUse(b)){
         alert2.style.display = 'block';
         isUsernameOk = false;
     }
+    else isUsernameOk = true;
     return isUsernameOk;
+}
+
+function usernameInUse(b){
+    fetch('https://centinel-ai.vercel.app/api/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username })
+    })
+        .then(response => response.text())
+        .then(message => console.log(message))
+        .catch(error => {
+            console.error('Error:', error);
+            console.error('Status:', error.status);
+            console.error('Status Text:', error.statusText);
+        });   
 }
 
 function checkPass() {
