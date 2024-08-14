@@ -30,16 +30,36 @@ function LoadLogin() {
 function checkLogin(){
     const password = document.getElementById("passwordId");
     const username = document.getElementById("usernameId");
+    var errorMessage = document.getElementById("error-message");
 
-    var alert = document.querySelector(".alert");
-
-
+    fetch('https://centinel-ai.vercel.app/api/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username: username, password: password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            errorMessage.style.display = "none";
+            loginUser();
+        } else {
+            errorMessage.style.display = "block";
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
+
 
 function loginUser(){
         var dialogBox = document.getElementById("centerpoint");
 
-        dialogBox.style.display = 'block';
+        dialogBox.style.display = 'none'; // wrtite "block" when you want to show the dialog box
+
+        window.location.href = 'CreateGroup.html';
 }
 
 function showMessage(){

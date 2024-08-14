@@ -14,7 +14,6 @@
             <div class="input-box">
                 <input type="text" placeholder="Username" id="usernameId" required>
                 <i class='bx bx-user'></i>
-                <p class="alert" style="display:none;">Invalid username</p>
             </div>
             <div class="input-box">
                 <input type="password" placeholder="Password" id="passwordId" required>
@@ -22,12 +21,12 @@
                 <b>
                     <i class='bx bx-hide' id="passIconId" onclick="showPass()"></i>
                 </b>
-                <p class="alert" style="display:none;">Invalid password</p>
             </div>
                 <div class="remember-forgot">
                     <label><input type="checkbox">Remember me</label>
                     <a href="ForgotPassword.html">Forgot password?</a>
                 </div>
+                <p id="error-message" style="color: red; display: none;">Username or password is incorrect</p>
                 <button type="submit" class="btn">Login</button>
                 <div class="register-link">
                     <p>Don't have an account? <a href="Register.html">Register</a></p>
