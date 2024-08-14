@@ -28,64 +28,94 @@ function checkMail() {
     if (!emailPattern.test(email)) {
         alert.style.display = 'block';
         isEmailOk = false;
+        return isEmailOk;
     }
-    if(emailInUse(b)){
-        alert2.style.display = 'block';
+
+    emailInUse(email).then(errorMessage => {
+        if (errorMessage) {
+            alert2.style.display = 'block';
+            isEmailOk = false;
+        } else {
+            isEmailOk = true;
+        }
+        return isEmailOk;
+    }).catch(error => {
+        console.error('Error:', error);
         isEmailOk = false;
-    }
-    else isEmailOk = true;
-    return isEmailOk;
+        return isEmailOk;
+    });
 }
 
-function emailInUse(b){
-    fetch('https://centinel-ai.vercel.app/api/register', {
+function emailInUse(email) {
+    return fetch('https://centinel-ai.vercel.app/api/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ email })
     })
-        .then(response => response.text())
-        .then(message => console.log(message))
-        .catch(error => {
-            console.error('Error:', error);
-            console.error('Status:', error.status);
-            console.error('Status Text:', error.statusText);
-        });   
+    .then(response => response.json())
+    .then(data => {
+        if (data.error && data.error === 'Email already in use') {
+            return 'Email already in use'; 
+        }
+        return null; 
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        return 'An error occurred';
+    });
 }
 
 function checkUsername() {
     var username = document.getElementById("usernameId").value;
     var alert = document.querySelector(".alertUsername");
-    var alert2 = document.querySelector(".alert2Username");
+    var alert2 = document.querySelector(".alertUsername2");
 
     if (username.length > 25 || username.length < 4) {
         alert.style.display = 'block';
         isUsernameOk = false;
     }
-    if(usernameInUse(b)){
-        alert2.style.display = 'block';
+    usernameInUse(username).then(errorMessage => {
+        if (errorMessage) {
+            alert2.style.display = 'block';
+            isUsernameOk = false;
+        } else {
+            isUsernameOk = true;
+        }
+        return isUsernameOk;
+    }).catch(error => {
+        console.error('Error:', error);
         isUsernameOk = false;
-    }
-    else isUsernameOk = true;
-    return isUsernameOk;
+        return isUsernameOk;
+    });
 }
 
-function usernameInUse(b){
-    fetch('https://centinel-ai.vercel.app/api/register', {
+function usernameInUse(username) {
+    return fetch('https://centinel-ai.vercel.app/api/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ username })
     })
-        .then(response => response.text())
-        .then(message => console.log(message))
-        .catch(error => {
-            console.error('Error:', error);
-            console.error('Status:', error.status);
-            console.error('Status Text:', error.statusText);
-        });   
+    .then(response => response.text())
+    .then(text => {
+        try {
+            const data = JSON.parse(text);
+            if (data.error && data.error === 'Username already in use') {
+                return 'Username already in use'; 
+            }
+            return null; 
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+            return 'An error occurred';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        return 'An error occurred';
+    });   
 }
 
 function checkPass() {
