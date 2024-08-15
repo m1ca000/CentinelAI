@@ -28,8 +28,8 @@ function LoadLogin() {
 }
 
 function checkLogin(){
-    const password = document.getElementById("passwordId");
-    const username = document.getElementById("usernameId");
+    const password = document.getElementById("passwordId").value;
+    const username = document.getElementById("usernameId").value;
     var errorMessage = document.getElementById("error-message");
 
     fetch('https://centinel-ai.vercel.app/api/login', {
@@ -43,23 +43,30 @@ function checkLogin(){
     .then(data => {
         if (data.success) {
             errorMessage.style.display = "none";
-            loginUser();
+            canLogin = true;
         } else {
             errorMessage.style.display = "block";
+            errorMessage.textContent = data.message || "Login failed. Please check your username and password.";
+            canLogin = false;
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        errorMessage.style.display = "block";
+        errorMessage.textContent = "An error occurred. Please try again later.";
+        canLogin = false;
     });
+    return canLogin;
 }
 
 
 function loginUser(){
         var dialogBox = document.getElementById("centerpoint");
 
-        dialogBox.style.display = 'none'; // wrtite "block" when you want to show the dialog box
-
-        window.location.href = 'CreateGroup.html';
+    if(canLogin){
+        //dialogBox.style.display = 'block';
+        //window.location.href = 'Groups.html';
+        console.log("Login success");
+    }
 }
 
 function showMessage(){
