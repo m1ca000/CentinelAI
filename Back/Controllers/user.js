@@ -1,5 +1,7 @@
 import {config} from './db.js';
 import pkg from 'pg';
+import nodemailer from 'nodemailer';
+import bcrypt from 'bcrypt';
 const {Client} = pkg;
 const client = new Client(config);
 
@@ -23,22 +25,22 @@ const register = async (req, res) => {
                 const values = [email, username, password];
                 await client.query(query, values);
                 await client.end();
-                res.status(201).send('Usuario registrado con éxito');
+                res.status(201).json({ error: 'Usuario registrado con éxito'});
             }
             else{
-                res.status(400).send('Este nombre ya se encuentra en uso');
-                await client.end();
+                res.status(400).json({ error: 'Este nombre ya se encuentra en uso' });
+                return;
             }
         }
         else {
-            res.status(400).send('Este email ya se encuentra en uso');
-            await client.end();
+            res.status(400).json({ error: 'Este email ya se encuentra en uso' });
+            return;
         }
     } 
     catch (err) {
         console.error(err);
         await client.end();
-        res.status(500).send('Error al registrar usuario');
+        res.status(500).json({ error: 'Error al registrar usuario' });
     }
 };
 
@@ -55,27 +57,74 @@ const login = async (req, res) => {
         await client.query(query, values);
         const result = await client.query(query, values);
         if(result.rows.length > 0){
-            const Password = result.rows[0].password
-            if(Password == password){
-                res.status(200).send('Sesión iniciada con éxito');
-                await client.end();
+            const hashedPassword = result.rows[0].password;
+            const isPasswordMatch = await bcrypt.compare(password, hashedPassword);
+            if(isPasswordMatch){
+                const code = Math.floor(100000 + Math.random() * 900000);
+                const updateQuery = 'UPDATE "user" SET "login_code" = $1, "login_code_timestamp" = $2 WHERE "email" = $3';
+                const updateValues = [code, new Date().getTime(), email];
+                await client.query(updateQuery, updateValues);
+
+                const transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 587,
+                secure: false,
+                auth: {
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASSWORD,
+                },
+                });
+
+                const mailOptions = {
+                    from: process.env.EMAIL_USER,
+                    to: email,
+                    subject: 'Login Code',
+                    text: `Your login code is: ${code}`,
+                };
+                await transporter.sendMail(mailOptions);
+                res.status(200).send('Sesión iniciada con éxito. Verifica tu email para obtener el código de login');
             }
-            else{
+            else {
                 res.status(401).send('La contraseña no coincide con el email');
-                await client.end();
             }
+        } 
+        else {
+          res.status(404).send('No se ha encontrado una cuenta con ese email');
         }
-        else{
-            res.status(404).send('No se ha encontrado una cuenta con ese email');
-            await client.end();
-        }
-        
-        
     }
     catch (err) {
         console.error(err);
         await client.end();
         res.status(500).send('Error al iniciar sesión');
+    }
+};
+
+const verifyCode = async (req, res) => {
+    try {
+      await client.connect();
+      const { email, code } = req.body;
+  
+      const query = 'SELECT "login_code", "login_code_timestamp" FROM "user" WHERE "email" = $1';
+      const values = [email];
+      const result = await client.query(query, values);
+  
+      if (result.rows.length > 0) {
+        const storedCode = result.rows[0].login_code;
+        const storedTimestamp = result.rows[0].login_code_timestamp;
+  
+        if (storedCode == code && new Date().getTime() - storedTimestamp < 30000) {
+          res.status(200).send('Código de login válido');
+        } else {
+          res.status(401).send('Código de login inválido o ha expirado');
+        }
+      } else {
+        res.status(404).send('No se ha encontrado una cuenta con ese email');
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Error al verificar código de login');
+    } finally {
+      await client.end();
     }
 };
 
@@ -108,6 +157,7 @@ const updatePassword = async (req, res) => {
 const user = {
     register,
     login,
+    verifyCode,
     updatePassword,
 };
 
