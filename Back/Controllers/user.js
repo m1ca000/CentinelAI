@@ -1,10 +1,12 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import {config} from './db.js';
 import pkg from 'pg';
 import nodemailer from 'nodemailer';
 import bcrypt from 'bcrypt';
 const {Client} = pkg;
 const client = new Client(config);
-
+await client.connect();
 
 const register = async (req, res) => {
     console.log("register user")
@@ -21,8 +23,11 @@ const register = async (req, res) => {
             const userValues = [username];
             const result2 = await client.query(userQuery, userValues);
             if(result2.rows[0] == null){
+                const saltRounds = 10;
+                const hashedPassword = await bcrypt.hash(password, saltRounds);
+
                 const query = 'INSERT INTO "user"("email", "username", "password") VALUES($1, $2, $3)';
-                const values = [email, username, password];
+                const values = [email, username, hashedPassword];
                 await client.query(query, values);
                 await client.end();
                 res.status(201).json({ error: 'Usuario registrado con éxito'});
@@ -61,9 +66,12 @@ const login = async (req, res) => {
             const isPasswordMatch = await bcrypt.compare(password, hashedPassword);
             if(isPasswordMatch){
                 const code = Math.floor(100000 + Math.random() * 900000);
+                const timestamp = new Date();
                 const updateQuery = 'UPDATE "user" SET "login_code" = $1, "login_code_timestamp" = $2 WHERE "email" = $3';
-                const updateValues = [code, new Date().getTime(), email];
+                const updateValues = [code, timestamp, email];
                 await client.query(updateQuery, updateValues);
+                console.log('EMAIL_USER:', process.env.EMAIL_USER);
+                console.log('EMAIL_PASSWORD:', process.env.EMAIL_PASSWORD);
 
                 const transporter = nodemailer.createTransport({
                 host: 'smtp.gmail.com',
@@ -112,7 +120,7 @@ const verifyCode = async (req, res) => {
         const storedCode = result.rows[0].login_code;
         const storedTimestamp = result.rows[0].login_code_timestamp;
   
-        if (storedCode == code && new Date().getTime() - storedTimestamp < 30000) {
+        if (storedCode == code && new Date().getTime() - storedTimestamp < 60000) {
           res.status(200).send('Código de login válido');
         } else {
           res.status(401).send('Código de login inválido o ha expirado');

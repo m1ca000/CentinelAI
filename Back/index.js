@@ -30,3 +30,4 @@ import user from "./Controllers/user.js";
 app.post('/api/register', user.register)
 app.post('/api/login', user.login)
 app.post('/api/updatePassword', user.updatePassword)
+app.post('/api/verifyCode', user.verifyCode)
