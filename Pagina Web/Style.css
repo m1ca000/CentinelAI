@@ -64,14 +64,14 @@ body {
 
 .input-box .alertUsername{
     display: none;
-    position: absolute;
+    position: relative;
     font-size: 14px;
     font-weight:200;
     color: red;
 }
 .input-box .alertUsername2 {
     display: none;
-    position: absolute;
+    position: relative;
     font-size: 14px;
     font-weight: 200;
     color: red;
@@ -79,14 +79,14 @@ body {
 
 .input-box .alertEmail{
     display: none;
-    position: absolute;
+    position: relative;
     font-size: 14px;
     font-weight:200;
     color: red;
 }
 .input-box .alertEmail2 {
     display: none;
-    position: absolute;
+    position: relative;
     font-size: 14px;
     font-weight: 200;
     color: red;
