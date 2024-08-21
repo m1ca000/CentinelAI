@@ -12,18 +12,14 @@ const register = async (req, res) => {
     const { email, username, password } = req.body;
     console.log("body", req.body)
     try {
-        let emailUsed = true;
-        let usernameUsed = true;
         const emailQuery = 'SELECT "email" FROM "user" WHERE "email" = $1';
         const emailValues = [email];
         const result = await client.query(emailQuery, emailValues);
         if (result.rows[0] == null){
-            emailUsed = false;
             const userQuery = 'SELECT "username" FROM "user" WHERE "username" = $1'
             const userValues = [username];
             const result2 = await client.query(userQuery, userValues);
             if(result2.rows[0] == null){
-                usernameUsed = false;
                 const saltRounds = 10;
                 const hashedPassword = await bcrypt.hash(password, saltRounds);
 
@@ -34,18 +30,14 @@ const register = async (req, res) => {
                 res.status(201).json({ message: 'Usuario registrado con éxito'});
             }
             else{
-                usernameUsed = true;
-                res.status(400).json({ error: 'Este nombre ya se encuentra en uso' });
+                res.status(401).json({ error: 'Este nombre ya se encuentra en uso' });
                 return;
             }
         }
         else {
-            emailUsed = true;
             res.status(400).json({ error: 'Este email ya se encuentra en uso' });
             return;
         }
-        return emailUsed;
-        return usernameUsed;
     } 
     catch (err) {
         console.error(err);
