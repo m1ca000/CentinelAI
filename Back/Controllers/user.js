@@ -30,11 +30,13 @@ const register = async (req, res) => {
                 res.status(201).json({ message: 'Usuario registrado con éxito'});
             }
             else{
+                await client.end();
                 res.status(401).json({ error: 'Este nombre ya se encuentra en uso' });
                 return;
             }
         }
         else {
+            await client.end();
             res.status(400).json({ error: 'Este email ya se encuentra en uso' });
             return;
         }
