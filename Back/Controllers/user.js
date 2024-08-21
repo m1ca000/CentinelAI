@@ -6,11 +6,9 @@ import nodemailer from 'nodemailer';
 import bcrypt from 'bcrypt';
 const {Client} = pkg;
 const client = new Client(config);
-await client.connect();
 
 const register = async (req, res) => {
-    console.log("register user");
-    console.log("conectado");
+    await client.connect();
     const { email, username, password } = req.body;
     console.log("body", req.body)
     try {
@@ -113,6 +111,7 @@ const login = async (req, res) => {
 };
 
 const verifyCode = async (req, res) => {
+    await client.connect();
     try {
       await client.connect();
       const { email, code } = req.body;
