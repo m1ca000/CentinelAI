@@ -26,6 +26,7 @@ app.get('/', (req, res) => {
 
 //Rutas
 import user from "./Controllers/user.js";
+import group from "./Controllers/group.js";
 
 //User
 app.post('/api/register', user.register)
@@ -33,3 +34,6 @@ app.post('/api/login', user.login)
 app.put('/api/updatePassword', user.updatePassword)
 app.post('/api/verifyCode', user.verifyCode)
 app.put('/api/userGroup', user.userGroup)
+
+//Group
+app.post('/api/createGroup', group.createGroup)
