@@ -37,3 +37,4 @@ app.put('/api/userGroup', user.userGroup)
 
 //Group
 app.post('/api/createGroup', group.createGroup)
+app.post('/api/deleteGroup', group.deleteGroup)
