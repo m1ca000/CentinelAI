@@ -108,7 +108,6 @@ const login = async (req, res) => {
 const verifyCode = async (req, res) => {
     await client.connect();
     try {
-      await client.connect();
       const { email, code } = req.body;
   
       const query = 'SELECT "login_code", "login_code_timestamp" FROM "user" WHERE "email" = $1';
