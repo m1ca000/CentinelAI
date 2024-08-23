@@ -50,9 +50,7 @@ const register = async (req, res) => {
 
 
 const login = async (req, res) => {
-    console.log("login user")
     await client.connect();
-    console.log("conectado")
     const { email, password } = req.body;
     console.log("body", req.body)
     try {
@@ -87,6 +85,7 @@ const login = async (req, res) => {
                     text: `Your login code is: ${code}`,
                 };
                 await transporter.sendMail(mailOptions);
+                await client.end();
                 res.status(200).json({ message: 'Sesión iniciada con éxito. Verifica tu email para obtener el código de login' });
             }
             else {
