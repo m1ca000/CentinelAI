@@ -1,5 +1,8 @@
 ﻿var isPassOk;
 
+const server = "https://centinel-ai.vercel.app/api/register";
+const local = "http://localhost:3000/api/register";
+
 function showPass() {
     var x = document.getElementById("passwordId");
     var y = document.getElementById("checkPasswordId");
@@ -26,7 +29,7 @@ async function registerUser() {
     var alertUsername2 = document.getElementsByClassName('alertUsername2')[0];
 
     try {
-        const response = await fetch('https://centinel-ai.vercel.app/api/register', {
+        const response = await fetch(server, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

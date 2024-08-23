@@ -33,6 +33,7 @@
                 </div>
 </form>
     </div>
+    <div class="screenShadow" id="screenShadow"></div>
     <div id="centerpoint">
         <div class="dialog" id="dialog">
             <h3>Confirmation required</h3>
@@ -45,8 +46,9 @@
                 <input type="text" id="fifth" maxlength="1" onkeyup="clickEvent(this,'sixth')">
                 <input type="text" id="sixth" maxlength="1">
             </div>
+            <p id="wrong-code" style="color: red; display: none;">Wrong code</p>
             <a onclick="resendMail()">Resend e-mail</a>
-            <button class="btn">Confirm</button>
+            <button class="btn" onsubmit="twoFactorAuth()">Confirm</button>
         </div>
     </div>
     <script src="FunctionsL.js"></script>

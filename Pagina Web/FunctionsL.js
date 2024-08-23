@@ -1,10 +1,12 @@
 ﻿var canLogin;
 
+const server = "https://centinel-ai.vercel.app/api/login";
+const verCode = "https://centinel-ai.vercel.app/api/verifcationCode";
+const local = "http://localhost:3000/api/login";
+
 function onLoginSubmit(e){
     console.log("Submited")
     e.preventDefault();
-
-    checkLogin();
 
     loginUser();
 }
@@ -27,50 +29,84 @@ function LoadLogin() {
     window.location.href = 'Login.html';
 }
 
-function checkLogin(){
+async function loginUser(){
     const password = document.getElementById("passwordId").value;
     const username = document.getElementById("usernameId").value;
-    var errorMessage = document.getElementById("error-message");
 
-    fetch('https://centinel-ai.vercel.app/api/login', {
+    var errorMessage = document.getElementById("error-message");
+    var dialogBox = document.getElementById("centerpoint", "screenShadow");
+
+    try{
+        const response = await fetch(server, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
+        //Login !OK
+        if (response.status === 401 && errorMessage) {
+            errorMessage.style.display = "block";
+            dialogBox.style.display = "none";
+            return;
+        }
+        //Login OK
+        if(response.status === 200 && dialogBox){   
+            dialogBox.style.display = "block";
+            errorMessage.style.display = "none";
+            return;
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+        if (errorMessage) {
+            errorMessage.style.display = "block";
+        }
+    }
+}
+
+async function twoFactorAuth(){
+    const userCode = document.getElementById("firts").value +
+                     document.getElementById("second").value +
+                     document.getElementById("third").value +
+                     document.getElementById("fourth").value +
+                     document.getElementById("fifth").value +
+                     document.getElementById("sixth").value;
+
+    var errorMessage = document.getElementById("wrong-code");
+
+    try{
+        const response = await fetch(verCode, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ username: username, password: password })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            errorMessage.style.display = "none";
-            canLogin = true;
-        } else {
-            errorMessage.style.display = "block";
-            errorMessage.textContent = data.message || "Login failed. Please check your username and password.";
-            canLogin = false;
-        }
-    })
-    .catch(error => {
-        errorMessage.style.display = "block";
-        errorMessage.textContent = "An error occurred. Please try again later.";
-        canLogin = false;
+        body: JSON.stringify({ code })
     });
-    return canLogin;
-}
-
-
-function loginUser(){
-        var dialogBox = document.getElementById("centerpoint");
-
-    if(canLogin){
-        //dialogBox.style.display = 'block';
-        //window.location.href = 'Groups.html';
-        console.log("Login success");
+    //verf Code OK
+    if(response.status === 200 && userCode){   
+        if(userCode === code){
+            //window.location.href = 'Dashboard.html';
+            errorMessage.style.display = "none";
+            console.log("Verification success");
+            return;
+        }
+    }
+    // verf Code !OK
+    if(response.status === 401 && userCode){
+        errorMessage.style.display = "block";   
+        console.log("Verification failed");
+        return;
+    }
+} catch (error) {
+    console.error('Error during login:', error);
+    if (errorMessage) {
+        errorMessage.style.display = "block";
     }
 }
+}
 
-function showMessage(){
-    var dialog= document.getElementById("dialog");
+function resendMail(){
+    //call send mail function from backend
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -78,10 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loginForm.addEventListener("submit", onLoginSubmit);
 })
-
-function resendMail(){
-    preventDefault();
-}
 
 function clickEvent(first, last) {
     first.value = first.value.replace(/[^0-9]/g, '');
