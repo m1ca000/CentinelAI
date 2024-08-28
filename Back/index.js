@@ -27,6 +27,7 @@ app.get('/', (req, res) => {
 //Rutas
 import user from "./Controllers/user.js";
 import group from "./Controllers/group.js";
+import camera from "./Controllers/camera.js";
 
 //User
 app.post('/api/register', user.register)
@@ -38,3 +39,6 @@ app.put('/api/userGroup', user.userGroup)
 //Group
 app.post('/api/createGroup', group.createGroup)
 app.post('/api/deleteGroup', group.deleteGroup)
+
+//Camera
+app.post('/api/moveCamera', camera.moveCamera)
