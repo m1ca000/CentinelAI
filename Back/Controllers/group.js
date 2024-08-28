@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import {config} from './db.js';
+import {config} from '../Config/db.js';
 import pkg from 'pg';
 import nodemailer from 'nodemailer';
 import bcrypt from 'bcrypt';

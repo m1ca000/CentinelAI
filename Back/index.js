@@ -9,7 +9,7 @@ const corsOptions = {
     origin: '*', // permitir acceso desde cualquier origen
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // permitir métodos HTTP
     allowedHeaders: ['Content-Type', 'Authorization'], // permitir headers
-    credentials: true
+    // credentials: true
   };
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -41,4 +41,4 @@ app.post('/api/createGroup', group.createGroup)
 app.post('/api/deleteGroup', group.deleteGroup)
 
 //Camera
-app.post('/api/moveCamera', camera.moveCamera)
+// app.post('/api/moveCamera', camera.moveCamera)

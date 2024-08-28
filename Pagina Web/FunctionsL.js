@@ -2,7 +2,7 @@
 
 const server = "https://centinel-ai.vercel.app/api/login";
 const verCode = "https://centinel-ai.vercel.app/api/verifcationCode";
-const local = "http://localhost:3000/api/login";
+const local = "http://localhost:8000/api/login";
 
 function onLoginSubmit(e){
     console.log("Submited")
@@ -37,7 +37,7 @@ async function loginUser(){
     var dialogBox = document.getElementById("centerpoint", "screenShadow");
 
     try{
-        const response = await fetch(server, {
+        const response = await fetch(local, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
