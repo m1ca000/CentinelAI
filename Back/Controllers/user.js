@@ -52,8 +52,6 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     await client.connect();
     const { email, password } = req.body;
-    console.log("body", req.body)
-    console.log(process.env.EMAIL_USER, process.env.EMAIL_PASSWORD)
     try {
         const query = 'SELECT "email", "password" FROM "user" WHERE "email" = $1 ';
         const values = [email];
