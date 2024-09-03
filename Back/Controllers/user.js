@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config();
+dotenv.config({ path: './Config/.env' });
 import {config} from '../Config/db.js';
 import pkg from 'pg';
 import nodemailer from 'nodemailer';
@@ -53,10 +53,10 @@ const login = async (req, res) => {
     await client.connect();
     const { email, password } = req.body;
     console.log("body", req.body)
+    console.log(process.env.EMAIL_USER, process.env.EMAIL_PASSWORD)
     try {
         const query = 'SELECT "email", "password" FROM "user" WHERE "email" = $1 ';
         const values = [email];
-        await client.query(query, values);
         const result = await client.query(query, values);
         if(result.rows.length > 0){
             const hashedPassword = result.rows[0].password;
