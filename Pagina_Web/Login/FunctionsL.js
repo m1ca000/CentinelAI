@@ -1,7 +1,7 @@
 ﻿var canLogin;
 
 const server = "https://centinel-ai.vercel.app/api/login";
-const verCode = "https://centinel-ai.vercel.app/api/verifcationCode";
+const verCode = "https://centinel-ai.vercel.app/api/verifyCode";
 const local = "http://localhost:8000/api/login";
 
 function onLoginSubmit(e){
@@ -31,18 +31,18 @@ function LoadLogin() {
 
 async function loginUser(){
     const password = document.getElementById("passwordId").value;
-    const username = document.getElementById("usernameId").value;
+    const email = document.getElementById("emailId").value;
 
     var errorMessage = document.getElementById("error-message");
     var dialogBox = document.getElementById("centerpoint", "screenShadow");
 
     try{
-        const response = await fetch(local, {
+        const response = await fetch(server, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ email, password })
         });
         //Login !OK
         if (response.status === 401 && errorMessage) {
@@ -73,6 +73,7 @@ async function twoFactorAuth(){
                      document.getElementById("sixth").value;
 
     var errorMessage = document.getElementById("wrong-code");
+    console.log(userCode);
 
     try{
         const response = await fetch(verCode, {

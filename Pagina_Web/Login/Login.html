@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <title>CentinelAI Login</title>
-    <link rel="stylesheet" href="Style.css">
+    <link rel="stylesheet" href="..\Style.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="shortcut icon" type="image/x-icon" href="Logo.png"/>
 </head>
@@ -12,7 +12,7 @@
         <form id="login">
             <h1>Login</h1>
             <div class="input-box">
-                <input type="text" placeholder="Username" id="usernameId" required>
+                <input type="text" placeholder="E-mail" id="emailId" required>
                 <i class='bx bx-user'></i>
             </div>
             <div class="input-box">
@@ -26,7 +26,7 @@
                     <label><input type="checkbox">Remember me</label>
                     <a href="ForgotPassword.html">Forgot password?</a>
                 </div>
-                <p id="error-message" style="color: red; display: none;">Username or password is incorrect</p>
+                <p id="error-message" style="color: red; display: none;">E-mail or password is incorrect</p>
                 <button type="submit" class="btn">Login</button>
                 <div class="register-link">
                     <p>Don't have an account? <a href="Register.html">Register</a></p>
@@ -48,7 +48,7 @@
             </div>
             <p id="wrong-code" style="color: red; display: none;">Wrong code</p>
             <a onclick="resendMail()">Resend e-mail</a>
-            <button class="btn" onsubmit="twoFactorAuth()">Confirm</button>
+            <button class="btn" onclick="twoFactorAuth()">Confirm</button>
         </div>
     </div>
     <script src="FunctionsL.js"></script>
