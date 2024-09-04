@@ -1,7 +1,7 @@
 ﻿var canLogin;
 
 const server = "https://centinel-ai.vercel.app/api/login";
-const verCode = "https://centinel-ai.vercel.app/api/verifcationCode";
+const verCode = "https://centinel-ai.vercel.app/api/verifyCode";
 const local = "http://localhost:8000/api/login";
 
 function onLoginSubmit(e){
@@ -31,18 +31,18 @@ function LoadLogin() {
 
 async function loginUser(){
     const password = document.getElementById("passwordId").value;
-    const username = document.getElementById("usernameId").value;
+    const email = document.getElementById("emailId").value;
 
     var errorMessage = document.getElementById("error-message");
     var dialogBox = document.getElementById("centerpoint", "screenShadow");
 
     try{
-        const response = await fetch(local, {
+        const response = await fetch(server, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ email, password })
         });
         //Login !OK
         if (response.status === 401 && errorMessage) {
@@ -65,14 +65,29 @@ async function loginUser(){
 }
 
 async function twoFactorAuth(){
-    const userCode = document.getElementById("firts").value +
-                     document.getElementById("second").value +
-                     document.getElementById("third").value +
-                     document.getElementById("fourth").value +
-                     document.getElementById("fifth").value +
-                     document.getElementById("sixth").value;
+    const firstElement = document.getElementById("first");
+    const secondElement = document.getElementById("second");
+    const thirdElement = document.getElementById("third");
+    const fourthElement = document.getElementById("fourth");
+    const fifthElement = document.getElementById("fifth");
+    const sixthElement = document.getElementById("sixth");
+
+    const email = document.getElementById("emailId").value;
+
+    if (!firstElement || !secondElement || !thirdElement || !fourthElement || !fifthElement || !sixthElement) {
+        console.error('One or more elements are missing');
+        return;
+    }
+
+    const userCode = firstElement.value +
+                     secondElement.value +
+                     thirdElement.value +
+                     fourthElement.value +
+                     fifthElement.value +
+                     sixthElement.value;
 
     var errorMessage = document.getElementById("wrong-code");
+    console.log(userCode);
 
     try{
         const response = await fetch(verCode, {
@@ -80,18 +95,17 @@ async function twoFactorAuth(){
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ code })
+        body: JSON.stringify({ code: userCode, email}) // Corrected the payload
     });
-    //verf Code OK
+
     if(response.status === 200 && userCode){   
         if(userCode === code){
-            //window.location.href = 'Dashboard.html';
             errorMessage.style.display = "none";
             console.log("Verification success");
             return;
         }
     }
-    // verf Code !OK
+
     if(response.status === 401 && userCode){
         errorMessage.style.display = "block";   
         console.log("Verification failed");
@@ -104,6 +118,7 @@ async function twoFactorAuth(){
     }
 }
 }
+
 
 function resendMail(){
     //call send mail function from backend
