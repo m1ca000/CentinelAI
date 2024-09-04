@@ -80,7 +80,22 @@ const login = async (req, res) => {
                     from: process.env.EMAIL_USER,
                     to: email,
                     subject: 'Login Code',
-                    text: `Your login code is: ${code}`,
+                    text: `Esperamos que estés teniendo un excelente día.
+
+Para completar tu autenticación y garantizar la seguridad de tu cuenta en CentinelAi, por favor utiliza el siguiente código:
+
+Código de Autenticación: ${code}
+
+Este código es válido por los próximos 5 minutos. Por favor, introdúcelo en la app para continuar.
+
+Si no has solicitado este código, por favor ignora este mensaje o contáctanos de inmediato para asegurarnos de que tu cuenta esté segura.
+
+Gracias por confiar en nosotros.
+
+¡Que tengas un excelente día!
+
+Saludos cordiales,
+El equipo de CentinelAi`,
                 };
                 await transporter.sendMail(mailOptions);
                 await client.end();
@@ -116,7 +131,7 @@ const verifyCode = async (req, res) => {
         const storedCode = result.rows[0].login_code;
         const storedTimestamp = result.rows[0].login_code_timestamp;
   
-        if (storedCode == code && new Date().getTime() - storedTimestamp < 60000) {
+        if (storedCode == code && new Date().getTime() - storedTimestamp < 300000) {
           res.status(200).json({ message: 'Código de login válido' });
         } else {
           res.status(401).json({ error: 'Código de login inválido o ha expirado' });

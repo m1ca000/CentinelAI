@@ -40,7 +40,7 @@ const uniqueCode = async (client) => {
 
 const createGroup = async (req, res) => {
     await client.connect();
-    const { name } = req.body;
+    const { name, username } = req.body;
     try {
         const codigo = await uniqueCode(client);
         const nameQuery = 'SELECT "name" FROM "group" WHERE "name" = $1';
@@ -50,8 +50,17 @@ const createGroup = async (req, res) => {
             const groupQuery = 'INSERT INTO "group"("name", "invite_code") VALUES($1, $2)';
             const groupValues = [name, codigo];
             await client.query(groupQuery, groupValues);
-            await client.end();
-            res.status(201).json({ message: 'Grupo creado con exito' })
+            const idQuery = 'SELECT "group_id" FROM "group" WHERE "invite_code" = $1';
+            const idValues = [codigo];
+            const idResult = await client.query(idQuery, idValues);
+            if (idResult.rows.length > 0) {
+                const groupId = idResult.rows[0].group_id;
+                const userQuery = 'UPDATE "user" SET "group" = $1, "type" = \'owner\' WHERE "username" = $2';
+                const userValues = [groupId, username];
+                await client.query(userQuery, userValues);
+                await client.end();
+                res.status(201).json({ message: 'Grupo creado con exito' });
+            }
         }
         else {
             await client.end();
@@ -59,7 +68,7 @@ const createGroup = async (req, res) => {
             return;
         }
     }
-    catch {
+    catch (err) {
         console.error(err);
         await client.end();
         res.status(500).json({ error: 'Error al crear grupo' });
