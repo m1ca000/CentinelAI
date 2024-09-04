@@ -16,10 +16,11 @@ function invitationCode(longitud = 8) {
     return codigo;
 };
 
-const uniqueCode = async () => {
+const uniqueCode = async (client) => {
     let codigo;
     let existe = true;
-    while (existe) {
+    try {
+        while (existe) {
         codigo = invitationCode();
         const codeQuery = 'SELECT "invite_code" FROM "group" WHERE "invite_code" = $1';
         const codeValues = [codigo];
@@ -28,6 +29,12 @@ const uniqueCode = async () => {
             existe = false;
         }
     }
+    }
+    catch (err) {
+        console.error('Error al generar un código único:', err);
+        throw new Error('Error al generar un código único');
+    }
+    
     return codigo;
 };
 
@@ -35,7 +42,7 @@ const createGroup = async (req, res) => {
     await client.connect();
     const { name } = req.body;
     try {
-        const codigo = uniqueCode();
+        const codigo = await uniqueCode(client);
         const nameQuery = 'SELECT "name" FROM "group" WHERE "name" = $1';
         const nameValues = [name];
         const nameResult = await client.query(nameQuery, nameValues);

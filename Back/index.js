@@ -1,8 +1,15 @@
 import express from "express";
-import cors from 'cors'
+import cors from 'cors';
+import multer from 'multer';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
+// Configuración express
 const app = express()
 const PORT = 8000
+
+// Configuración multer
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 // Middlewares
 const corsOptions = {
@@ -28,6 +35,7 @@ app.get('/', (req, res) => {
 import user from "./Controllers/user.js";
 import group from "./Controllers/group.js";
 import camera from "./Controllers/camera.js";
+import person from "./Controllers/person.js";
 
 //User
 app.post('/api/register', user.register)
@@ -41,4 +49,7 @@ app.post('/api/createGroup', group.createGroup)
 app.post('/api/deleteGroup', group.deleteGroup)
 
 //Camera
-// app.post('/api/moveCamera', camera.moveCamera)
+
+
+//Person
+app.post('/api/uploadInfo', upload.single('photo'), person.uploadInfo)
