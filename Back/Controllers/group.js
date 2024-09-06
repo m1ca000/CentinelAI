@@ -79,15 +79,22 @@ const deleteGroup = async (req, res) => {
     await client.connect();
     const {name} = req.body;
     try {
-        const nameQuery = 'SELECT "name" FROM "group" WHERE "name" = $1';
+        const nameQuery = 'SELECT "name", "group_id" FROM "group" WHERE "name" = $1';
         const nameValues = [name];
         const nameResult = await client.query(nameQuery, nameValues);
         if (nameResult.rows.length > 0) {
-            const deleteQuery = 'DELETE FROM "group" WHERE "name" = $1';
-            const deleteValues = [name];
-            await client.query(deleteQuery,deleteValues);
-            await client.end()
-            res.status(201).json({ message: 'Grupo eliminado con éxito'});
+            const groupId = nameResult.rows[0].group_id
+            const userQuery = 'UPDATE "user" SET "type" = null, "group" = null WHERE "group" = $1';
+            const userValues = [groupId];
+            const userResult = await client.query(userQuery, userValues);
+            if (userResult.rows.length > 0) {
+                const deleteQuery = 'DELETE FROM "group" WHERE "name" = $1';
+                const deleteValues = [name];
+                await client.query(deleteQuery,deleteValues);
+                await client.end()
+                res.status(201).json({ message: 'Grupo eliminado con éxito'});
+            }
+            
         }
         else {
             await client.end();
@@ -95,7 +102,7 @@ const deleteGroup = async (req, res) => {
             return;
         }
     }
-    catch {
+    catch (err) {
         console.error(err);
         await client.end();
         res.status(500).json({ error: 'Error al eliminar grupo' });

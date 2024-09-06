@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config({ path: './Config/.env' });
+dotenv.config();
 import {config} from '../Config/db.js';
 import pkg from 'pg';
 import nodemailer from 'nodemailer';
@@ -8,6 +8,8 @@ const {Client} = pkg;
 const client = new Client(config);
 
 const register = async (req, res) => {
+    const {Client} = pkg;
+    const client = new Client(config);
     await client.connect();
     const { email, username, password } = req.body;
     console.log("body", req.body)
@@ -50,6 +52,8 @@ const register = async (req, res) => {
 
 
 const login = async (req, res) => {
+    const {Client} = pkg;
+    const client = new Client(config);
     await client.connect();
     const { email, password } = req.body;
     try {
@@ -119,6 +123,8 @@ El equipo de CentinelAi`,
 };
 
 const verifyCode = async (req, res) => {
+    const {Client} = pkg;
+    const client = new Client(config);
     await client.connect();
     try {
       const { email, code } = req.body;
@@ -148,9 +154,9 @@ const verifyCode = async (req, res) => {
 };
 
 const updatePassword = async (req, res) => {
-    console.log('Restaurar password');
+    const {Client} = pkg;
+    const client = new Client(config);
     await client.connect();
-    console.log('Conectado');
     const { email, password } = req.body;
     try {
         const query = 'SELECT "email", "password" FROM "user" WHERE "email" = $1';
@@ -174,9 +180,9 @@ const updatePassword = async (req, res) => {
 };
 
 const userGroup = async (req, res) => {
-    console.log("User Group");
+    const {Client} = pkg;
+    const client = new Client(config);
     await client.connect();
-    console.log("Conectado");
     const { group, email} = req.body;
     try {
         const query = 'UPDATE "user" SET "group" = $1 WHERE "email" = $2';
