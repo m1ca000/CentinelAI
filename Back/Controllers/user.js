@@ -198,12 +198,71 @@ const userGroup = async (req, res) => {
     }
 }
 
+const resendEmail = async (req, res) => {
+    const {Client} = pkg;
+    const client = new Client(config);
+    await client.connect();
+    try {
+        const {email} = req.body;
+        const emailQuery = 'SELECT "email" FROM "user" WHERE "email" = $1';
+        const emailValues = [email];
+        const emailResult = await client.query(emailQuery, emailValues);
+        if (emailResult.rows.length > 0) {
+            const code = Math.floor(100000 + Math.random() * 900000);
+            const timestamp = new Date();
+            const updateQuery = 'UPDATE "user" SET "login_code" = $1, "login_code_timestamp" = $2 WHERE "email" = $3';
+            const updateValues = [code, timestamp, email];
+            await client.query(updateQuery, updateValues);
+
+            const transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 587,
+                secure: false,
+                auth: {
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASSWORD,
+                },
+            });
+
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: 'Login Code',
+                text: `Esperamos que estés teniendo un excelente día.
+
+Para completar tu autenticación y garantizar la seguridad de tu cuenta en CentinelAi, por favor utiliza el siguiente código:
+
+Código de Autenticación: ${code}
+
+Este código es válido por los próximos 5 minutos. Por favor, introdúcelo en la app para continuar.
+
+Si no has solicitado este código, por favor ignora este mensaje o contáctanos de inmediato para asegurarnos de que tu cuenta esté segura.
+
+Gracias por confiar en nosotros.
+
+¡Que tengas un excelente día!
+
+Saludos cordiales,
+El equipo de CentinelAi`,
+            };
+            await transporter.sendMail(mailOptions);
+            await client.end();
+            res.status(200).json({ message: 'Email reenviado con exito' });
+        }
+    }
+    catch (err) {
+        console.error(err);
+        await client.end();
+        res.status(500).json({ error: 'Error al reenviar el codigo' });
+    }
+}
 const user = {
     register,
     login,
     verifyCode,
     updatePassword,
     userGroup,
+    resendEmail,
 };
 
 export default user;

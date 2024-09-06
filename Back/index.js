@@ -43,6 +43,7 @@ app.post('/api/login', user.login)
 app.put('/api/updatePassword', user.updatePassword)
 app.post('/api/verifyCode', user.verifyCode)
 app.put('/api/userGroup', user.userGroup)
+app.post('/api/resendEmail', user.resendEmail)
 
 //Group
 app.post('/api/createGroup', group.createGroup)
