@@ -2,6 +2,7 @@
 
 const server = "https://centinel-ai.vercel.app/api/login";
 const verCode = "https://centinel-ai.vercel.app/api/verifyCode";
+const resendEmail = "https://centinel-ai.vercel.app/api/resendEmail";
 const local = "http://localhost:8000/api/login";
 
 function onLoginSubmit(e){
@@ -79,7 +80,7 @@ async function twoFactorAuth(){
         return;
     }
 
-    const userCode = firstElement.value +
+    const code = firstElement.value +
                      secondElement.value +
                      thirdElement.value +
                      fourthElement.value +
@@ -87,7 +88,7 @@ async function twoFactorAuth(){
                      sixthElement.value;
 
     var errorMessage = document.getElementById("wrong-code");
-    console.log(userCode);
+    console.log(code);
 
     try{
         const response = await fetch(verCode, {
@@ -95,18 +96,18 @@ async function twoFactorAuth(){
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ code: userCode, email}) // Corrected the payload
+        body: JSON.stringify({ code, email})
     });
 
-    if(response.status === 200 && userCode){   
-        if(userCode === code){
+    if(response.status === 200 && code){   
+        if(code === code){
             errorMessage.style.display = "none";
             console.log("Verification success");
             return;
         }
     }
 
-    if(response.status === 401 && userCode){
+    if(response.status === 401 && code){
         errorMessage.style.display = "block";   
         console.log("Verification failed");
         return;
@@ -120,9 +121,22 @@ async function twoFactorAuth(){
 }
 
 
-function resendMail(){
-    //call send mail function from backend
+async function resendMail(){
+    const email = document.getElementById("emailId").value;
+
+    try{
+        const response = await fetch(resendEmail, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({email})
+    });
+    }catch (error) {
+        console.error('Error during login:', error);
+    }
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("login");

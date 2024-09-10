@@ -8,11 +8,16 @@
     <link rel="shortcut icon" type="image/x-icon" href="Logo.png"/>
 </head>
 <body>
+    <div class="centinelAI">
+        <h1 id="centinelAI">CentinelAI</h1>
+        <img id="logo" src="../Logo.png" alt="Logo">
+    </div>
     <div class="wrapper">
-        <form id="login">
+        <form id="verification">
             <h1>Veryfication required</h1>
             <p id="dialog">Please verify your e-mail</p>
-            <button type="submit" class="btn">Verify</button>
+            <button type="submit" class="btn" id="verificationBtn" onclick="verifyEmail(event)">Verify</button>
+            <h2 id="verificationAlert">Verification success!</h2>
 </form>
     </div>
     <script src="FunctionsR.js"></script>

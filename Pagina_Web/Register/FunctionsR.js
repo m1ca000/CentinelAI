@@ -1,6 +1,7 @@
 ﻿var isPassOk;
 
 const server = "https://centinel-ai.vercel.app/api/register";
+const verify = "https://centinel-ai.vercel.app/api/#";
 const local = "http://localhost:3000/api/register";
 
 function showPass() {
@@ -86,8 +87,34 @@ async function onRegisterSubmit(e) {
     }
 }
 
+async function verifyEmail(e){
+    e.preventDefault();
+
+    const alert = document.getElementById('verificationAlert');
+    const btm = document.getElementById('verificationBtn');
+
+    try{
+        const response = await fetch(verify, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ verified: true })
+        });
+    
+        if(response.status === 200){
+            console.log('Email verified!');
+            alert.style.display = 'block';
+        }
+    }catch (error) {
+        console.error('Error:', error.message);
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const registerForm = document.getElementById("register");
 
-    registerForm.addEventListener("submit", onRegisterSubmit);
+    if (registerForm) {
+        registerForm.addEventListener("submit", onRegisterSubmit);
+    }
 });
