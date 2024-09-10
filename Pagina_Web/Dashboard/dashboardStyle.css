@@ -1,14 +1,16 @@
 body {
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: Helvetica;
+    background:rgb(65, 65, 65);
 }
 
-/*Upper Bar*/
+/* Upper Bar */
 .upper-bar {
-    background-color: #333;
+    background-color: #195fb4;
     color: #fff;
     padding: 10px;
     text-align: center;
     font-family: Helvetica, Arial, sans-serif;
+    border-radius: 10px;
 }
 
 .upper-bar ul {
@@ -22,27 +24,61 @@ body {
 .upper-bar li {
     margin-right: 33px;
     margin-left: 33px;
-    transition: transform 0.3s ease, color 0.3s ease; 
+    transition: transform 0.3s ease, color 0.3s ease;
     cursor: pointer;
-
     font-size: large;
     font-weight: 600;
 }
 
 .upper-bar li:hover {
     transform: scale(1.2);
-    color: #f0b400;
+    color: #00ccf0;
 }
 
 .upper-bar li.active {
-    transform: scale(1.2); 
-    color: #ff5733; 
+    transform: scale(1.2);
+    color: #1a48d0;
+}
+
+/* Content Blocks */
+.content {
+    position: relative;
+    height: 720px; /* Adjust based on content height */
+    overflow: hidden;
 }
 
 .block {
-    display: none;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
     padding: 20px;
-    margin-top: 20px;
+    transition: left 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    opacity: 0;
+    display: none;
+    border-radius: 10px;
+}
+
+.block.active {
+    display: block;
+    left: 0;
+    opacity: 1;
+}
+
+.block.slide-in-right {
+    left: 100%;
+}
+
+.block.slide-out-right {
+    left: -100%;
+}
+
+.block.slide-in-left {
+    left: -100%;
+}
+
+.block.slide-out-left {
+    left: 100%;
 }
 
 .cameras {
@@ -63,9 +99,4 @@ body {
 
 .group {
     background-color: #ffccff;
-}
-
-
-.block.active {
-    display: block;
 }
