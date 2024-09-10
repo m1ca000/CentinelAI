@@ -39,6 +39,7 @@ const uniqueCode = async (client) => {
 };
 
 const createGroup = async (req, res) => {
+    const client = new Client(config);
     await client.connect();
     const { name, username } = req.body;
     try {
@@ -76,6 +77,7 @@ const createGroup = async (req, res) => {
 };
 
 const deleteGroup = async (req, res) => {
+    const client = new Client(config);
     await client.connect();
     const {name} = req.body;
     try {

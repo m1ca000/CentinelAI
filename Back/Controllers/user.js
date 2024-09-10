@@ -8,7 +8,6 @@ const {Client} = pkg;
 const client = new Client(config);
 
 const register = async (req, res) => {
-    const {Client} = pkg;
     const client = new Client(config);
     await client.connect();
     const { email, username, password } = req.body;
@@ -25,11 +24,38 @@ const register = async (req, res) => {
                 const saltRounds = 10;
                 const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-                const query = 'INSERT INTO "user"("email", "username", "password") VALUES($1, $2, $3)';
+                const query = 'INSERT INTO "user"("email", "username", "password", "is_verified") VALUES($1, $2, $3, false)';
                 const values = [email, username, hashedPassword];
                 await client.query(query, values);
+
+                const transporter = nodemailer.createTransport({
+                    host: 'smtp.gmail.com',
+                    port: 587,
+                    secure: false,
+                    auth: {
+                        user: process.env.EMAIL_USER,
+                        pass: process.env.EMAIL_PASSWORD,
+                    },
+                    });
+    
+                    const mailOptions = {
+                        from: process.env.EMAIL_USER,
+                        to: email,
+                        subject: 'Email Verification',
+                        text: `Para completar tu autenticación y garantizar la seguridad de tu cuenta en CentinelAi, por favor ingrese al siguiente link para verificar que este email es valido:
+
+                        Link:
+    
+                        Gracias por confiar en nosotros.
+    
+                        ¡Que tengas un excelente día!
+    
+                        Saludos cordiales,
+                        El equipo de CentinelAi`,
+                    };
+                await transporter.sendMail(mailOptions);
                 await client.end();
-                res.status(201).json({ message: 'Usuario registrado con éxito'});
+                res.status(201).json({ message: 'Usuario registrado con éxito. Verifica tu email'});
             }
             else{
                 await client.end();
@@ -50,9 +76,26 @@ const register = async (req, res) => {
     }
 };
 
+const verifyEmail = async (req, res) => {
+    const client = new Client(config);
+    await client.connect();
+    const { email } = req.body;
+    try {
+        const query = 'UPDATE "user" SET "is_verified" = true WHERE "email" = $1';
+        const value = [ email ];
+        await client.query(query, value);
+        await client.end();
+        res.status(201).json({ message: 'Email verificado con exito'})
+        
+    }
+    catch (err) {
+        console.error(err);
+        await client.end();
+        res.status(500).json({ error:'Error al verificar Email'});
+    }
+}
 
 const login = async (req, res) => {
-    const {Client} = pkg;
     const client = new Client(config);
     await client.connect();
     const { email, password } = req.body;
@@ -123,7 +166,6 @@ El equipo de CentinelAi`,
 };
 
 const verifyCode = async (req, res) => {
-    const {Client} = pkg;
     const client = new Client(config);
     await client.connect();
     try {
@@ -154,7 +196,6 @@ const verifyCode = async (req, res) => {
 };
 
 const updatePassword = async (req, res) => {
-    const {Client} = pkg;
     const client = new Client(config);
     await client.connect();
     const { email, password } = req.body;
@@ -180,7 +221,6 @@ const updatePassword = async (req, res) => {
 };
 
 const userGroup = async (req, res) => {
-    const {Client} = pkg;
     const client = new Client(config);
     await client.connect();
     const { group, email} = req.body;
@@ -199,7 +239,6 @@ const userGroup = async (req, res) => {
 }
 
 const resendEmail = async (req, res) => {
-    const {Client} = pkg;
     const client = new Client(config);
     await client.connect();
     try {
@@ -263,6 +302,7 @@ const user = {
     updatePassword,
     userGroup,
     resendEmail,
+    verifyEmail,
 };
 
 export default user;
