@@ -10,7 +10,6 @@ body {
     padding: 10px;
     text-align: center;
     font-family: Helvetica, Arial, sans-serif;
-    border-radius: 10px;
 }
 
 .upper-bar ul {
@@ -22,8 +21,8 @@ body {
 }
 
 .upper-bar li {
-    margin-right: 33px;
-    margin-left: 33px;
+    margin-right: 5%;
+    margin-left: 5%;
     transition: transform 0.3s ease, color 0.3s ease;
     cursor: pointer;
     font-size: large;
@@ -37,7 +36,7 @@ body {
 
 .upper-bar li.active {
     transform: scale(1.2);
-    color: #1a48d0;
+    color: #c466fb;
 }
 
 /* Content Blocks */
@@ -50,13 +49,12 @@ body {
 .block {
     position: absolute;
     top: 0;
-    width: 100%;
+    width: 95%;
     height: 100%;
     padding: 20px;
     transition: left 0.5s ease-in-out, opacity 0.5s ease-in-out;
     opacity: 0;
     display: none;
-    border-radius: 10px;
 }
 
 .block.active {
@@ -87,6 +85,15 @@ body {
 
 .registry {
     background-color: #ccffcc;
+}
+
+.registry .Entry-Wrapper{
+    width: 30%;
+    height: 90%;
+    background-color: black;
+    position: absolute; 
+    top: 20px;
+    left: 20px;
 }
 
 .dashboard {

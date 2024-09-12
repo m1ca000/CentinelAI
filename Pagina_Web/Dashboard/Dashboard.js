@@ -34,3 +34,27 @@ items.forEach(item => {
         }
     });
 });
+
+//Camera
+document.querySelector('.move--90').addEventListener('click', () => sendValue(-90));
+document.querySelector('.move--45').addEventListener('click', () => sendValue(-45));
+document.querySelector('.move-0').addEventListener('click', () => sendValue(0));
+document.querySelector('.move-45').addEventListener('click', () => sendValue(45));
+document.querySelector('.move-90').addEventListener('click', () => sendValue(90));
+
+function sendValue(angle) {
+    fetch('http://192.168.168.177/set_angle', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ angle: angle })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
