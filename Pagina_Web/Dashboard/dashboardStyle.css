@@ -1,15 +1,19 @@
-body {
-    font-family: Helvetica;
-    background:rgb(65, 65, 65);
+/* General Reset and Body Styles */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: #f4f4f4; /* Light background for the body */
 }
 
 /* Upper Bar */
 .upper-bar {
-    background-color: #195fb4;
+    background-color: #007bff; /* Blue color for the bar */
     color: #fff;
-    padding: 10px;
+    padding: 15px;
     text-align: center;
-    font-family: Helvetica, Arial, sans-serif;
+    font-size: 1.2em;
+    position: relative; /* Ensure it stays fixed at the top */
 }
 
 .upper-bar ul {
@@ -21,89 +25,127 @@ body {
 }
 
 .upper-bar li {
-    margin-right: 5%;
-    margin-left: 5%;
-    transition: transform 0.3s ease, color 0.3s ease;
+    margin: 0 10px;
+    transition: color 0.3s ease, transform 0.3s ease;
     cursor: pointer;
-    font-size: large;
-    font-weight: 600;
+    font-size: 1em;
+    font-weight: 500;
 }
 
 .upper-bar li:hover {
-    transform: scale(1.2);
-    color: #00ccf0;
+    color: #fff;
+    transform: scale(1.1);
 }
 
 .upper-bar li.active {
-    transform: scale(1.2);
-    color: #c466fb;
+    color: #c466fb; /* Highlight color for active item */
+}
+
+/* Content Container */
+.content {
+    margin-top: 7px; /* Space for the upper-bar */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between content blocks */
+    height: calc(100vh - 60px); /* Full viewport height minus the upper-bar height */
+    overflow: hidden; /* Prevent scrollbars due to absolute positioning */
+    position: relative; /* Ensure positioning for .block elements */
 }
 
 /* Content Blocks */
-.content {
-    position: relative;
-    height: 720px; /* Adjust based on content height */
-    overflow: hidden;
-}
-
 .block {
-    position: absolute;
-    top: 0;
-    width: 95%;
-    height: 100%;
+    background-color: #fff; /* White background for blocks */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow */
     padding: 20px;
-    transition: left 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    transition: opacity 0.3s ease, transform 0.3s ease;
     opacity: 0;
-    display: none;
+    position: absolute; /* Absolute positioning for block transitions */
+    width: 100%;
+    height: calc(100% - 40px); /* Full height minus padding */
+    top: 0;
+    left: 0;
 }
 
 .block.active {
-    display: block;
-    left: 0;
     opacity: 1;
+    display: block;
 }
 
 .block.slide-in-right {
-    left: 100%;
+    transform: translateX(100%);
 }
 
 .block.slide-out-right {
-    left: -100%;
+    transform: translateX(-100%);
 }
 
 .block.slide-in-left {
-    left: -100%;
+    transform: translateX(-100%);
 }
 
 .block.slide-out-left {
-    left: 100%;
+    transform: translateX(100%);
 }
 
+/* Specific Block Styles */
 .cameras {
-    background-color: #ffcccc;
+    background-color: #ffcccc; /* Light pink */
 }
 
 .registry {
-    background-color: #ccffcc;
+    background-color: #ccffcc; /* Light green */
 }
 
-.registry .Entry-Wrapper{
+.registry .Entry-Wrapper {
     width: 30%;
     height: 90%;
-    background-color: black;
-    position: absolute; 
+    background-color: #000; /* Black background for the entry wrapper */
+    position: absolute;
     top: 20px;
     left: 20px;
+    border-radius: 8px; /* Rounded corners */
 }
 
 .dashboard {
-    background-color: #ccccff;
+    background-color: #ccccff; /* Light blue */
 }
 
 .account {
-    background-color: #ffffcc;
+    background-color: #ffffcc; /* Light yellow */
 }
 
 .group {
-    background-color: #ffccff;
+    background-color: #ffccff; /* Light purple */
+}
+
+/* Buttons */
+button {
+    background: #007bff; /* Blue background */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #0056b3; /* Darker blue on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .upper-bar {
+        font-size: 1em; /* Adjust font size for smaller screens */
+    }
+
+    .upper-bar li {
+        font-size: 0.9em; /* Slightly smaller font size for menu items */
+        margin: 0 5px;
+    }
+
+    .content {
+        padding: 10px; /* Reduce padding on smaller screens */
+    }
 }
