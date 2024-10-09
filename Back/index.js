@@ -1,6 +1,7 @@
 import express from "express";
 import cors from 'cors';
 import multer from 'multer';
+import authMidd from "./Middleware/auth.js";
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
 // Configuración express
@@ -40,18 +41,18 @@ import person from "./Controllers/person.js";
 //User
 app.post('/api/register', user.register)
 app.post('/api/login', user.login)
-app.put('/api/updatePassword', user.updatePassword)
-app.post('/api/verifyCode', user.verifyCode)
-app.put('/api/userGroup', user.userGroup)
-app.post('/api/resendEmail', user.resendEmail)
-app.put('/api/verifyEmail', user.verifyEmail)
+app.put('/api/updatePassword', authMidd.verifyToken, user.updatePassword)
+app.post('/api/verifyCode', authMidd.verifyToken, user.verifyCode)
+app.put('/api/userGroup', authMidd.verifyToken, user.userGroup)
+app.post('/api/resendEmail', authMidd.verifyToken, user.resendEmail)
+app.put('/api/verifyEmail', authMidd.verifyToken, user.verifyEmail)
 
 //Group
-app.post('/api/createGroup', group.createGroup)
-app.post('/api/deleteGroup', group.deleteGroup)
+app.post('/api/createGroup', authMidd.verifyToken, group.createGroup)
+app.delete('/api/deleteGroup', authMidd.verifyToken, authMidd.verifyAdmin, authMidd.verifyOwner, group.deleteGroup)
 
 //Camera
 
 
 //Person
-app.post('/api/uploadInfo', upload.single('photo'), person.uploadInfo)
+app.post('/api/uploadInfo', authMidd.verifyToken, authMidd.verifyAdmin, upload.single('photo'), person.uploadInfo)
