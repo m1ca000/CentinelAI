@@ -56,3 +56,4 @@ app.delete('/api/deleteGroup', authMidd.verifyToken, authMidd.verifyAdmin, authM
 
 //Person
 app.post('/api/uploadInfo', authMidd.verifyToken, authMidd.verifyAdmin, upload.single('photo'), person.uploadInfo)
+app.post('/api/sendImage', authMidd.verifyToken, upload.single('photo'), person.sendImageToIa)

@@ -4,6 +4,7 @@ import {config} from '../Config/db.js';
 import pkg from 'pg';
 const {Client} = pkg;
 const client = new Client(config);
+import userServices from './userServices.js'
 
 function invitationCode(longitud = 8) {
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -98,10 +99,30 @@ const deleteGroup = async (groupId, groupName) => {
     }
 
 }
+const getGroupByUser = async (email) => {
+    const client = new Client(config);
+    await client.connect();
+    try{
+        const usuario = await userServices.getUsuarioByEmail(email);
+        const groupId = usuario.group;
+
+        const {rows} = await client.query(
+            'SELECT * FROM "group" WHERE "group_id" = $1',
+            [groupId]
+        );
+        await client.end();
+        return rows
+    }
+    catch(error) {
+        await client.end();
+        throw error;
+    }
+}
 export default {
     invitationCode,
     getGroupByCode,
     getGroupByName,
+    getGroupByUser,
     createGroup,
     deleteGroup,
 }

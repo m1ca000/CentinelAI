@@ -3,45 +3,62 @@ dotenv.config();
 import {config} from '../Config/db.js';
 import pkg from 'pg';
 const {Client} = pkg;
-import cloudinary from '../Config/CloudConfig.js'
+import cloudinary from '../Config/CloudConfig.js';
 import personServices from '../Service/personServices.js';
-
+import groupServices from '../Service/groupServices.js';
+import axios from 'axios';
+import fs from 'fs';
 
 const uploadInfo = async (req, res) => {
+  const email = req.userEmail;
   try {
-    const file = req.file;
-    const {name, surname, DNI, } = req.body;
+    const file = req.file.buffer;
+    const {name, surname, DNI } = req.body;
     if (!name || !surname || !DNI || !file) {
       return res.status(400).json({ error: 'Falta archivo o info' });
     }
+    const userGroup = await groupServices.getGroupByUser(email);
+    const group = userGroup.rows[0].group_id
+    const existingPerson = await personServices.existingPerson(name, surname, DNI, group);
 
-    cloudinary.uploader.upload_stream(async (error, result) => {
-      if (error) {
-        console.error('Cloudinary error:', error);
-        return res.status(500).json({ error: 'Error subiendo la imagen a Cloudinary' });
-      }
-  
-      const imageUrl = result.secure_url;
-  
-      try {
-        const newPerson = await personServices.savePerson(name, surname, DNI, imageUrl);
-        res.status(201).json({ message: 'Se guardo correctamente la información' });
-      } 
-      catch (dbError) {
-        console.error('Database error:', dbError);
-        res.status(500).json({ error:'Error guardando la info de la persona' });
-      }
-    })  
-    .end(file.buffer);
+    if (!existingPerson) {
+      const photo = await personServices.uploadToCloudinary(file);
+      const newPerson = await personServices.savePerson(name, surname, DNI, photo, group);
+      return res.status(201).json({ message: 'Persona registrada con exito' });
+    }
+    
+    return res.status(409).json({ message: 'Ya existe un registro igual' })
+
   }
   catch (err) {
-    console.error('Error subiendo la imagen:', err);
-    res.status(500).json({ error: 'Error subiendo la imagen' });
+    console.error(err);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+};
+
+const sendImageToIa = async (req, res) => {
+  console.log("Entro a la función general")
+  try {
+    console.log("Entro al try catch")
+    const image = req.file.buffer;
+    if(!image) {
+      return res.status(400).json({ error: 'Falta archivo o info' });
+    }
+    console.log("LLego la imagen")
+
+    const resultFromIa = await personServices.sendImageToAPI(image);
+    console.log("Se ejecuto la función de la IA")
+    return res.status(201).json({ message: 'Imagen procesada con exito', data: resultFromIa });
+  }
+  catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error en el servidor' })
   }
 };
 
 const person = {
     uploadInfo,
+    sendImageToIa,
 };
 
 export default person;
