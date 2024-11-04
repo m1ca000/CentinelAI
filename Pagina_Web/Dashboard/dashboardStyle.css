@@ -1,19 +1,15 @@
-/* General Reset and Body Styles */
-html, body {
-    height: 100%;
-    margin: 0;
-    font-family: 'Roboto', sans-serif;
-    background: #f4f4f4; /* Light background for the body */
+body {
+    font-family: Helvetica;
+    background:rgb(65, 65, 65);
 }
 
 /* Upper Bar */
 .upper-bar {
-    background-color: #007bff; /* Blue color for the bar */
+    background-color: #195fb4;
     color: #fff;
-    padding: 15px;
+    padding: 10px;
     text-align: center;
-    font-size: 1.2em;
-    position: relative; /* Ensure it stays fixed at the top */
+    font-family: Helvetica, Arial, sans-serif;
 }
 
 .upper-bar ul {
@@ -25,127 +21,151 @@ html, body {
 }
 
 .upper-bar li {
-    margin: 0 10px;
-    transition: color 0.3s ease, transform 0.3s ease;
+    margin-right: 5%;
+    margin-left: 5%;
+    transition: transform 0.3s ease, color 0.3s ease;
     cursor: pointer;
-    font-size: 1em;
-    font-weight: 500;
+    font-size: large;
+    font-weight: 600;
 }
 
 .upper-bar li:hover {
-    color: #fff;
-    transform: scale(1.1);
+    transform: scale(1.2);
+    color: #00ccf0;
 }
 
 .upper-bar li.active {
-    color: #c466fb; /* Highlight color for active item */
-}
-
-/* Content Container */
-.content {
-    margin-top: 7px; /* Space for the upper-bar */
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Space between content blocks */
-    height: calc(100vh - 60px); /* Full viewport height minus the upper-bar height */
-    overflow: hidden; /* Prevent scrollbars due to absolute positioning */
-    position: relative; /* Ensure positioning for .block elements */
+    transform: scale(1.2);
+    color: #c466fb;
 }
 
 /* Content Blocks */
+.content {
+    position: relative;
+    height: 720px; /* Adjust based on content height */
+    overflow: hidden;
+}
+
 .block {
-    background-color: #fff; /* White background for blocks */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow */
-    padding: 20px;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    opacity: 0;
-    position: absolute; /* Absolute positioning for block transitions */
-    width: 100%;
-    height: calc(100% - 40px); /* Full height minus padding */
+    position: absolute;
     top: 0;
-    left: 0;
+    width: 95%;
+    height: 100%;
+    padding: 20px;
+    transition: left 0.2s ease-in-out, opacity 0.2s ease-in-out;
+    opacity: 0;
+    display: none;
 }
 
 .block.active {
-    opacity: 1;
     display: block;
+    left: 0;
+    opacity: 1;
 }
 
 .block.slide-in-right {
-    transform: translateX(100%);
+    left: 100%;
 }
 
 .block.slide-out-right {
-    transform: translateX(-100%);
+    left: -100%;
 }
 
 .block.slide-in-left {
-    transform: translateX(-100%);
+    left: -100%;
 }
 
 .block.slide-out-left {
-    transform: translateX(100%);
+    left: 100%;
 }
 
-/* Specific Block Styles */
 .cameras {
-    background-color: #ffcccc; /* Light pink */
+    background-color: #ffcccc;
 }
-
+/*Registry*/
 .registry {
-    background-color: #ccffcc; /* Light green */
+    background-color: #ccffcc;
 }
 
-.registry .Entry-Wrapper {
-    width: 30%;
-    height: 90%;
-    background-color: #000; /* Black background for the entry wrapper */
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    border-radius: 8px; /* Rounded corners */
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
 }
 
+.modal.active {
+    display: block;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 5;
+}
+
+.overlay.active {
+    display: block;
+}
+
+video, canvas {
+    max-width: 100%;
+    margin-top: 10px;
+}
+.container {
+    display: flex;
+    gap: 20px;
+}
+.column {
+    width: 300px;
+    height: 300px;
+    padding: 20px;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    overflow-y: auto;
+}
+.table-container {
+    padding: 20px;
+}
+  
+table {
+    width: 100%;
+    border-collapse: collapse; /* Ensures borders are joined */
+}
+  
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+  
+th {
+    background-color: #f2f2f2; /* Header background */
+}
 .dashboard {
-    background-color: #ccccff; /* Light blue */
+    background-color: #ccccff;
 }
 
 .account {
-    background-color: #ffffcc; /* Light yellow */
+    background-color: #ffffcc;
 }
 
 .group {
-    background-color: #ffccff; /* Light purple */
+    background-color: #ffccff;
 }
 
-/* Buttons */
-button {
-    background: #007bff; /* Blue background */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
+/*General*/
+.button{
 
-button:hover {
-    background: #0056b3; /* Darker blue on hover */
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .upper-bar {
-        font-size: 1em; /* Adjust font size for smaller screens */
-    }
-
-    .upper-bar li {
-        font-size: 0.9em; /* Slightly smaller font size for menu items */
-        margin: 0 5px;
-    }
-
-    .content {
-        padding: 10px; /* Reduce padding on smaller screens */
-    }
 }

@@ -131,3 +131,11 @@ document.getElementById('capture').addEventListener('click', () => {
     const dataUrl = canvas.toDataURL('image/png');
     console.log(dataUrl); // Captured image
 });
+
+//Group
+fetch('https://centinel-ai.vercel.app/api/userGroup')
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('display-text').textContent = JSON.stringify(data);
+  })
+  .catch(error => console.error('Error fetching data:', error));

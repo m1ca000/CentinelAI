@@ -1,7 +1,6 @@
 ﻿var isPassOk;
 
 const server = "https://centinel-ai.vercel.app/api/register";
-const verify = "https://centinel-ai.vercel.app/api/#";
 const local = "http://localhost:3000/api/register";
 
 function showPass() {
@@ -46,6 +45,10 @@ async function registerUser() {
             alertUsername2.style.display = "block";
             return;
         }
+        if (response.status === 201){
+            window.location.href = "CentinelAI/Pagina_Web";
+            return;
+        }
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -84,30 +87,6 @@ async function onRegisterSubmit(e) {
     checkPass();
     if (isPassOk) {
         registerUser();
-    }
-}
-
-async function verifyEmail(e){
-    e.preventDefault();
-
-    const alert = document.getElementById('verificationAlert');
-    const btm = document.getElementById('verificationBtn');
-
-    try{
-        const response = await fetch(verify, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ verified: true })
-        });
-    
-        if(response.status === 200){
-            console.log('Email verified!');
-            alert.style.display = 'block';
-        }
-    }catch (error) {
-        console.error('Error:', error.message);
     }
 }
 

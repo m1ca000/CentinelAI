@@ -35,7 +35,7 @@ async function loginUser(){
     const email = document.getElementById("emailId").value;
 
     var errorMessage = document.getElementById("error-message");
-    var dialogBox = document.getElementById("centerpoint", "screenShadow");
+    var dialogBox = document.getElementById("centerpoint");
 
     try{
         const response = await fetch(server, {
@@ -45,19 +45,26 @@ async function loginUser(){
             },
             body: JSON.stringify({ email, password })
         });
-        //Login !OK
-        if (response.status === 401 && errorMessage) {
+
+        // Procesa el JSON de la respuesta solo si el estado es 200
+        if (response.status === 200) {
+            const data = await response.json();
+            
+            if (data.token) {
+                localStorage.setItem('token', data.token); // Guarda el token en localStorage
+                dialogBox.style.display = "block"; // Muestra el cuadro de diálogo si el login es exitoso
+                errorMessage.style.display = "none";
+                console.log("Login successful, token received");
+            } else {
+                console.error('Error: Token no recibido');
+            }
+        } else if (response.status === 401 && errorMessage) {
+            // Si el login falla
             errorMessage.style.display = "block";
             dialogBox.style.display = "none";
-            return;
         }
-        //Login OK
-        if(response.status === 200 && dialogBox){   
-            dialogBox.style.display = "block";
-            errorMessage.style.display = "none";
-            return;
-        }
-    } catch (error) {
+    } 
+    catch (error) {
         console.error('Error during login:', error);
         if (errorMessage) {
             errorMessage.style.display = "block";
@@ -94,7 +101,9 @@ async function twoFactorAuth(){
         const response = await fetch(verCode, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${localStorage.getItem('token')}`
+
         },
         body: JSON.stringify({ code, email})
     });
@@ -103,6 +112,7 @@ async function twoFactorAuth(){
         if(code === code){
             errorMessage.style.display = "none";
             console.log("Verification success");
+window.location.href = "CentinelAI/Pagina_Web";
             return;
         }
     }
@@ -127,10 +137,11 @@ async function resendMail(){
     try{
         const response = await fetch(resendEmail, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({email})
+        body: JSON.stringify({code, email})
     });
     }catch (error) {
         console.error('Error during login:', error);
