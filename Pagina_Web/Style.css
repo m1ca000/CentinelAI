@@ -14,37 +14,6 @@ body {
     background: rgb(49, 140, 231);
 }
 
-.centinelAI{
-    display: block;
-    position: fixed;
-
-    top: 5px;
-    
-    /*background-color: rgb(255, 255, 255, .2);*/
-
-    width: 100%;
-}
-
-.centinelAI #centinelAI{
-    display: flex;
-    justify-content: center;
-    
-    font-size: 70px;
-    color: blue;
-}
-
-.centinelAI #logo {
-    width:70px;
-    height: 70px;
-    margin: 5px;
-    padding: 5px;
-    position: absolute;
-    top: 8px;
-    left: 10px;
-
-    border-radius: 20%;
-  }
-
 .wrapper{
     width: 420px;
     background: transparent;

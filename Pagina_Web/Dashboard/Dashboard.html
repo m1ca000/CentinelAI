@@ -19,25 +19,85 @@
     </div>
     <div class="content">
         <!-- Cameras -->
-        <div class="cameras block  active">
+        <div class="cameras block">
             <div class="move-camera">
                 <ul>
-                    <button class="move--90">-90°</button>
-                    <button class="move--45">-45°</button>
                     <button class="move-0">0°</button>
                     <button class="move-45">45°</button>
                     <button class="move-90">90°</button>
+                    <button class="move-135">135°</button>
+                    <button class="move-180">180°</button>
                 </ul>
+            </div>
+            <div>
+                <button class="unlock">Unlock</button>
             </div>
         </div>
         <!-- Registry -->
         <div class="registry block">
-            <div class="Entry-Wrapper">
-
+            <button onclick="openModal()">Reguster someone</button>
+            <div class="overlay" id="overlay"></div>
+            <div class="modal" id="modal">
+                <h3>Capture or Upload a Photo</h3>
+                <video id="video" autoplay playsinline></video>
+                <button id="capture">Capture Photo</button>
+                <input type="file" id="upload" accept="image/*">
+                <canvas id="canvas" style="display:none;"></canvas>
+                <button onclick="closeModal()">Close</button>
             </div>
-        </div>
+            <div class="container">
+                <div class="column">
+                  <h2>Allowed</h2>
+                  <p></p>
+                </div>
+                <div class="column">
+                  <h2>Blocked</h2>
+                  <p></p>
+                </div>
+              </div>
+              <!-- History table  
+        <div class="table-container">
+            <h2>History</h2>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Date</th>
+                      <th>Time</th>
+                      <th>Camera</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>John Doe</td>
+                      <td>2024-10-29</td>
+                      <td>10:00 AM</td>
+                      <td>Camera 1</td>
+                    </tr>
+                    <tr>
+                      <td>Jane Smith</td>
+                      <td>2024-10-30</td>
+                      <td>11:00 AM</td>
+                      <td>Camera 2</td>
+                    </tr>
+                    <tr>
+                      <td>Mike Johnson</td>
+                      <td>2024-10-31</td>
+                      <td>12:00 PM</td>
+                      <td>Camera 3</td>
+                    </tr>
+                    <tr>
+                      <td>Emily Davis</td>
+                      <td>2024-11-01</td>
+                      <td>1:00 PM</td>
+                      <td>Camera 4</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+        </div>-->
         <!-- Dashboard -->
-        <div class="dashboard block">
+        <div class="dashboard block active">
 
         </div>
         <!-- Account -->

@@ -36,19 +36,24 @@ items.forEach(item => {
 });
 
 //Camera
-document.querySelector('.move--90').addEventListener('click', () => sendValue(-90));
-document.querySelector('.move--45').addEventListener('click', () => sendValue(-45));
-document.querySelector('.move-0').addEventListener('click', () => sendValue(0));
-document.querySelector('.move-45').addEventListener('click', () => sendValue(45));
-document.querySelector('.move-90').addEventListener('click', () => sendValue(90));
+document.querySelector('.move-0').addEventListener('click', () => sendValue(0, 'angle'));
+document.querySelector('.move-45').addEventListener('click', () => sendValue(45, 'angle'));
+document.querySelector('.move-90').addEventListener('click', () => sendValue(90, 'angle'));
+document.querySelector('.move-135').addEventListener('click', () => sendValue(135, 'angle'));
+document.querySelector('.move-180').addEventListener('click', () => sendValue(180, 'angle'));
 
-function sendValue(angle) {
-    fetch('http://192.168.168.177/set_angle', {
+document.querySelector('.unlock').addEventListener('click', () => sendValue(300, 'unlock'));
+
+function sendValue(value, type) {
+    let bodyData = {};
+    bodyData[type] = value;
+
+    fetch('http://192.168.82.177/set_angle', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ angle: angle })
+        body: JSON.stringify(bodyData)
     })
     .then(response => response.json())
     .then(data => {
@@ -58,3 +63,71 @@ function sendValue(angle) {
         console.error('Error:', error);
     });
 }
+
+//Registry
+        // Open and close modal functions
+        function openModal() {
+            document.getElementById('modal').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+            
+            // Activate camera when modal opens
+            const video = document.getElementById('video');
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then((stream) => {
+                    video.srcObject = stream;
+                })
+                .catch((error) => {
+                    console.error('Camera not accessible:', error);
+                });
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+
+            // Stop camera when modal closes
+            const video = document.getElementById('video');
+            const stream = video.srcObject;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                video.srcObject = null;
+            }
+        }
+
+        // Capture and send photo
+        document.getElementById('capture').addEventListener('click', () => {
+            const canvas = document.getElementById('canvas');
+            const video = document.getElementById('video');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convert canvas to blob and send it
+            canvas.toBlob(blob => {
+                const formData = new FormData();
+                formData.append('image', blob, 'captured.jpg'); // 'image' is the field name expected by the API
+
+                fetch('https://centinel-ai.vercel.app/api/sendImage', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }, 'image/jpeg', 0.8);
+        });
+
+// Capture photo
+document.getElementById('capture').addEventListener('click', () => {
+    const canvas = document.getElementById('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const dataUrl = canvas.toDataURL('image/png');
+    console.log(dataUrl); // Captured image
+});
