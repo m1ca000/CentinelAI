@@ -153,9 +153,36 @@ th, td {
 th {
     background-color: #f2f2f2; /* Header background */
 }
+
+/*Dashboard*/
 .dashboard {
     background-color: #ccccff;
 }
+
+.activeCamera{
+    position: fixed;       
+    top: 9%;                
+    left: 2%;               
+    width: 40vw;          
+    height: 50vh;         
+    background-color: #000;
+    border: 2px solid #fff;
+    z-index: 1000;
+}
+
+.history {
+    position: fixed;         
+    top: 9%;                 
+    right: 4%;               
+    width: 30%;             
+    height: 87vh;            
+    background-color: #f1f1f1; 
+    border: 2px solid #ccc;  
+    z-index: 1000;           
+    border-radius: 8px;      
+    overflow-y: auto;        
+}
+
 
 .account {
     background-color: #ffffcc;

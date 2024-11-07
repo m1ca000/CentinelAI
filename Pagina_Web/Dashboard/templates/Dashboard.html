@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <title>Dashboard</title>
-    <link rel="stylesheet" href="dashboardStyle.css">
+    <link rel="stylesheet" href="..\dashboardStyle.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="shortcut icon" type="image/x-icon" href="../Logo.png"/>
 </head>
@@ -38,13 +38,13 @@
             <button onclick="openModal()">Reguster someone</button>
             <div class="overlay" id="overlay"></div>
             <div class="modal" id="modal">
-                <h3>Capture or Upload a Photo</h3>
-                <video id="video" autoplay playsinline></video>
-                <button id="capture">Capture Photo</button>
-                <input type="file" id="upload" accept="image/*">
-                <canvas id="canvas" style="display:none;"></canvas>
-                <button onclick="closeModal()">Close</button>
-            </div>
+              <h3>Capture or Upload a Photo</h3>
+              <img id="video" src="http://127.0.0.1:5000/video_feed" width="640" height="480" alt="Camera Feed">
+              <button id="capture">Capture Photo</button>
+              <input type="file" id="upload" accept="image/*">
+              <canvas id="canvas" style="display:none;"></canvas>
+              <button onclick="closeModal()">Close</button>
+          </div>
             <div class="container">
                 <div class="column">
                   <h2>Allowed</h2>
@@ -67,50 +67,31 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>John Doe</td>
-                      <td>2024-10-29</td>
-                      <td>10:00 AM</td>
-                      <td>Camera 1</td>
-                    </tr>
-                    <tr>
-                      <td>Jane Smith</td>
-                      <td>2024-10-30</td>
-                      <td>11:00 AM</td>
-                      <td>Camera 2</td>
-                    </tr>
-                    <tr>
-                      <td>Mike Johnson</td>
-                      <td>2024-10-31</td>
-                      <td>12:00 PM</td>
-                      <td>Camera 3</td>
-                    </tr>
-                    <tr>
-                      <td>Emily Davis</td>
-                      <td>2024-11-01</td>
-                      <td>1:00 PM</td>
-                      <td>Camera 4</td>
-                    </tr>
+
                   </tbody>
                 </table>
             </div>
         </div>
         <!-- Dashboard -->
-        <div class="dashboard block">
-
+        <div class="dashboard block active">
+          <div class="activeCamera">
+          </div>
+          <div class="history">
+            
+          </div>
         </div>
         <!-- Account -->
         <div class="account block">
 
         </div>
         <!-- Group -->
-        <div class="group block active">
+        <div class="group block">
           <div class="groupcode">
           <h2>Group Code</h2>
-          <p id="display-text"></p>
+          <p id="display-text" type="password"></p>
           </div>
         </div>
     </div>
-    <script src="Dashboard.js"></script>
+    <script src="..\static\Dashboard.js"></script>
 </body>
 </html>

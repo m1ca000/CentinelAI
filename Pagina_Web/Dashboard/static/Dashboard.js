@@ -65,77 +65,57 @@ function sendValue(value, type) {
 }
 
 //Registry
-        // Open and close modal functions
-        function openModal() {
-            document.getElementById('modal').classList.add('active');
-            document.getElementById('overlay').classList.add('active');
-            
-            // Activate camera when modal opens
-            const video = document.getElementById('video');
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then((stream) => {
-                    video.srcObject = stream;
-                })
-                .catch((error) => {
-                    console.error('Camera not accessible:', error);
-                });
+function openModal() {
+    document.getElementById('modal').classList.add('active');
+    document.getElementById('overlay').classList.add('active');
+}
+
+function closeModal() {
+    document.getElementById('modal').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+}
+
+document.getElementById('capture').addEventListener('click', function() {
+    fetch('http://127.0.0.1:5000/capture', {
+        method: 'POST',
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        if (data.status === 'success') {
+            alert('Foto capturada y guardada!');
+        } else {
+            alert('Error al capturar la foto');
         }
+    })
+    .catch(error => console.error('Error:', error));
+});
 
-        function closeModal() {
-            document.getElementById('modal').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
+document.getElementById('upload').addEventListener('change', function(event) {
+    const formData = new FormData();
+    formData.append('file', event.target.files[0]);
 
-            // Stop camera when modal closes
-            const video = document.getElementById('video');
-            const stream = video.srcObject;
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                video.srcObject = null;
-            }
+    fetch('http://127.0.0.1:5000/upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        if (data.status === 'success') {
+            alert('Foto subida con éxito');
+        } else {
+            alert('Error al subir la foto');
         }
-
-        // Capture and send photo
-        document.getElementById('capture').addEventListener('click', () => {
-            const canvas = document.getElementById('canvas');
-            const video = document.getElementById('video');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            // Convert canvas to blob and send it
-            canvas.toBlob(blob => {
-                const formData = new FormData();
-                formData.append('image', blob, 'captured.jpg'); // 'image' is the field name expected by the API
-
-                fetch('https://centinel-ai.vercel.app/api/sendImage', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Success:', data);
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-            }, 'image/jpeg', 0.8);
-        });
-
-// Capture photo
-document.getElementById('capture').addEventListener('click', () => {
-    const canvas = document.getElementById('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    const dataUrl = canvas.toDataURL('image/png');
-    console.log(dataUrl); // Captured image
+    })
+    .catch(error => console.error('Error:', error));
 });
 
 //Group
 fetch('https://centinel-ai.vercel.app/api/userGroup')
   .then(response => response.json())
   .then(data => {
+
     document.getElementById('display-text').textContent = JSON.stringify(data);
   })
   .catch(error => console.error('Error fetching data:', error));

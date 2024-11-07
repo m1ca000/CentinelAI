@@ -1,0 +1,9 @@
+Lado grande__
+Altura: 8cm
+Ancho:3.6cm
+Agujeros: 0.3cm|^	Diámetro:0.4cm
+		          v|
+Lado Chico__
+Ancho: 2.1cm
+Agujeros: 0.25cm |^	Diámetro:0.5cm
+		              v|
