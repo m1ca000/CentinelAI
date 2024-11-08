@@ -50,6 +50,7 @@ app.put('/api/verifyEmail', authMidd.verifyToken, user.verifyEmail)
 //Group
 app.post('/api/createGroup', authMidd.verifyToken, group.createGroup)
 app.delete('/api/deleteGroup', authMidd.verifyToken, authMidd.verifyAdmin, authMidd.verifyOwner, group.deleteGroup)
+app.get('/api/showInviteCode', authMidd.verifyToken, group.showGroupCode)
 
 //Camera
 

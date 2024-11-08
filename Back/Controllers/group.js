@@ -67,9 +67,25 @@ const deleteGroup = async (req, res) => {
     }
 }
 
+const showGroupCode = async (req, res) => {
+    const email = req.userEmail
+    try {
+        const group = await groupServices.getGroupByUser(email);
+        if (group) {
+        return res.status(200).json({ invitationCode: group.invite_code });
+        }
+
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Error en el servidor' })
+    }
+}
+
 const group = {
     createGroup,
     deleteGroup,
+    showGroupCode,
 };
 
 export default group;
