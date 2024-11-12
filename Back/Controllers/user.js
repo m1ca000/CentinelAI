@@ -125,12 +125,6 @@ const updatePassword = async (req, res) => {
     }
 };
 
-//Corregir esta función para que:
-//Reciba el codigo de invitación,
-//Seleccione de la tabla de grupos el grupo con ese codigo
-//Seleccione el usuario que pertenece al grupo y sea el owner
-//Se le envie un mail diciendo que le llego una solicitud para unir a alguien al grupo
-//De ahí, si el owner la acepta se una al grupo
 const userGroup = async (req, res) => {
     const client = new Client(config);
     await client.connect();

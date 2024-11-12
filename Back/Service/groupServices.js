@@ -57,14 +57,17 @@ const createGroup = async (name, code, email) => {
 
     try {
         const {rows} = await client.query(
-            'INSERT INTO "group"("name", "invite_code") VALUES($1, $2)',
+            'INSERT INTO "group"("name", "invite_code") VALUES($1, $2) RETURNING "group_id"',
             [name, code]
         );
 
+        console.log(rows)
+
         if (rows) {
+            const groupId = rows[0].group_id;
             const {rows2} = await client.query(
                 'UPDATE "user" SET "group" = $1, "type" = \'owner\' WHERE "email" = $2',
-                [rows.group_id, email]
+                [groupId, email]
             )
         }
         await client.end();
@@ -104,14 +107,20 @@ const getGroupByUser = async (email) => {
     await client.connect();
     try{
         const usuario = await userServices.getUsuarioByEmail(email);
-        const groupId = usuario.group;
 
-        const {rows} = await client.query(
-            'SELECT * FROM "group" WHERE "group_id" = $1',
-            [groupId]
-        );
-        await client.end();
-        return rows
+        if(usuario) {
+            const groupId = usuario.group;
+            const {rows} = await client.query(
+                'SELECT * FROM "group" WHERE "group_id" = $1',
+                [groupId]
+            );
+            await client.end();
+            return rows[0];
+        }
+        else {
+            console.log("No se encontro el usuario");
+            await client.end();
+        }
     }
     catch(error) {
         await client.end();
