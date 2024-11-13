@@ -51,7 +51,8 @@ function sendValue(value, type) {
     fetch('http://192.168.82.177/set_angle', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+                        'authorization': `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify(bodyData)
     })
@@ -64,18 +65,53 @@ function sendValue(value, type) {
     });
 }
 
-//Registry
-function openModal() {
-    document.getElementById('modal').classList.add('active');
-    document.getElementById('overlay').classList.add('active');
+//Group
+function createGroup() {
+
+    fetch('https://centinel-ai.vercel.app/api/createGroup',{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+    
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Group created:", data);
+        })
+        .catch(error => console.error('Error fetching data:', error));
 }
 
-function closeModal() {
-    document.getElementById('modal').classList.remove('active');
-    document.getElementById('overlay').classList.remove('active');
+function showCode() {
+    fetch('https://centinel-ai.vercel.app/api/showInviteCode',{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById('display-text').textContent = JSON.stringify(data);
+        })
+        .catch(error => console.error('Error fetching data:', error));
 }
 
-document.getElementById('capture').addEventListener('click', function() {
+//Dashboard
+
+function capture() {
+    console.log("Capture function triggered");
     fetch('http://127.0.0.1:5000/capture', {
         method: 'POST',
     })
@@ -89,33 +125,4 @@ document.getElementById('capture').addEventListener('click', function() {
         }
     })
     .catch(error => console.error('Error:', error));
-});
-
-document.getElementById('upload').addEventListener('change', function(event) {
-    const formData = new FormData();
-    formData.append('file', event.target.files[0]);
-
-    fetch('http://127.0.0.1:5000/upload', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        if (data.status === 'success') {
-            alert('Foto subida con éxito');
-        } else {
-            alert('Error al subir la foto');
-        }
-    })
-    .catch(error => console.error('Error:', error));
-});
-
-//Group
-fetch('https://centinel-ai.vercel.app/api/userGroup')
-  .then(response => response.json())
-  .then(data => {
-
-    document.getElementById('display-text').textContent = JSON.stringify(data);
-  })
-  .catch(error => console.error('Error fetching data:', error));
+};

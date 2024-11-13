@@ -6,7 +6,7 @@ from flask import Flask, render_template, Response, request
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-face_cascade = cv2.CascadeClassifier("Resources/Seleccionamiento-Facial.xml")
+face_cascade = cv2.CascadeClassifier(r'C:\Users\feder\OneDrive\Escritorio\CentinelAI\Pagina_Web\Dashboard\Resources\Seleccionamiento-Facial.xml')
 cap = cv2.VideoCapture(0)
 CarpetaDeCaras = "Faces"
 
