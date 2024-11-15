@@ -112,6 +112,8 @@ function showCode() {
 
 function capture() {
     console.log("Capture function triggered");
+
+    // Step 1: Capture the photo
     fetch('http://127.0.0.1:5000/capture', {
         method: 'POST',
     })
@@ -120,9 +122,31 @@ function capture() {
         console.log(data);
         if (data.status === 'success') {
             alert('Foto capturada y guardada!');
+
+            // Step 2: Send the captured photo to the remote API
+            const filePath = 'C:\\Users\\feder\\OneDrive\\Escritorio\\CentinelAI\\Pagina_Web\\Dashboard\\Faces\\image.jpg'; // Update with actual filename
+            const file = new File([filePath], 'image.jpg'); // Create a File object
+            
+            const formData = new FormData();
+            formData.append('image', file);
+
+            fetch('https://centinel-ai.vercel.app/api/sendImage', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(apiResponse => {
+                console.log(apiResponse);
+                if (apiResponse.status === 'success') {
+                    alert('Imagen enviada correctamente!');
+                } else {
+                    alert('Error al enviar la imagen');
+                }
+            })
+            .catch(error => console.error('Error al enviar la imagen:', error));
         } else {
             alert('Error al capturar la foto');
         }
     })
     .catch(error => console.error('Error:', error));
-};
+}

@@ -6,9 +6,9 @@ from flask import Flask, render_template, Response, request
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-face_cascade = cv2.CascadeClassifier(r'C:\Users\feder\OneDrive\Escritorio\CentinelAI\Pagina_Web\Dashboard\Resources\Seleccionamiento-Facial.xml')
+face_cascade = cv2.CascadeClassifier(r'C:/Users/feder/OneDrive/Escritorio/CentinelAI/Pagina_Web/Dashboard/Resources/Seleccionamiento-Facial.xml')
 cap = cv2.VideoCapture(0)
-CarpetaDeCaras = "Faces"
+CarpetaDeCaras = r"C:/Users/feder/OneDrive/Escritorio/CentinelAI/Pagina_Web/Dashboard/Faces"
 
 # Function to capture photo and save face
 def ShootPhoto(carpeta, nombre, pareidolia, image):
@@ -57,6 +57,7 @@ def capture_photo():
     img = imutils.resize(img, width=640)
     gris = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     cara = face_cascade.detectMultiScale(gris, scaleFactor=1.1, minNeighbors=4, minSize=(70, 70))
+    auxFrame = img.copy()
     
     if request.method == 'POST':
         if not os.path.exists(CarpetaDeCaras):
@@ -64,7 +65,7 @@ def capture_photo():
         
         ListaDeRostros = glob.glob(os.path.join(CarpetaDeCaras, '*'))
         i = len(ListaDeRostros) + 1
-        image_path = ShootPhoto(CarpetaDeCaras, f"Cara Nro {i}.jpeg", cara, img)
+        image_path = ShootPhoto(CarpetaDeCaras, f"Cara Nro {i}.jpeg", cara, auxFrame)
         return {"status": "success", "image_path": image_path}
     
     return {"status": "error"}

@@ -183,7 +183,7 @@ video{
 
 .information{
     position: fixed;
-    top:79%;
+    top:81%;
     width: 60vw;
 }
 
@@ -202,6 +202,29 @@ video{
 }
 
 /*General*/
-.button{
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    color: #f9f7ff; 
+    background-color: #5c6cfc;
+    border: none; 
+    border-radius: 5px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
 
+.button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Slightly larger shadow */
+    transform: translateY(-2px); /* Slight hover lift */
+}
+
+.button:active {
+    background-color: #004080; /* Even darker blue when clicked */
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); /* Reduced shadow */
+    transform: translateY(1px); /* Subtle press effect */
 }
