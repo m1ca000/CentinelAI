@@ -71,8 +71,10 @@ const showGroupCode = async (req, res) => {
     const email = req.userEmail
     try {
         const group = await groupServices.getGroupByUser(email);
+
+        console.log(group);
         if (group) {
-        return res.status(200).json({ invitationCode: group.rows[0].invite_code });
+        return res.status(200).json({ invitationCode: group.invite_code });
         }
 
     }

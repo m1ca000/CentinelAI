@@ -102,7 +102,7 @@ async function twoFactorAuth(){
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
 
         },
         body: JSON.stringify({ code, email})
@@ -112,7 +112,7 @@ async function twoFactorAuth(){
         if(code === code){
             errorMessage.style.display = "none";
             console.log("Verification success");
-window.location.href = "CentinelAI/Pagina_Web";
+            window.location.href = "../Dashboard/templates/Dashboard.html";
             return;
         }
     }

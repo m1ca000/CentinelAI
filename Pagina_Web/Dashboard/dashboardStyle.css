@@ -1,11 +1,17 @@
 body {
     font-family: Helvetica;
-    background:rgb(65, 65, 65);
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Prevents overflow from causing unwanted scrollbars */
+    background: rgb(65, 65, 65); /* Keep the background consistent */
 }
 
 /* Upper Bar */
 .upper-bar {
-    background-color: #195fb4;
+    background-color:#353E92;
+    ;
     color: #fff;
     padding: 10px;
     text-align: center;
@@ -49,8 +55,8 @@ body {
 .block {
     position: absolute;
     top: 0;
-    width: 95%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     padding: 20px;
     transition: left 0.2s ease-in-out, opacity 0.2s ease-in-out;
     opacity: 0;
@@ -80,52 +86,25 @@ body {
 }
 
 .cameras {
-    background-color: #ffcccc;
+    background-image: url('./Resources/background.png');
+    background-size: cover; /* Ensures the image covers the entire element */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
 }
 /*Registry*/
 .registry {
-    background-color: #ccffcc;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 10;
-    background-color: white;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-}
-
-.modal.active {
-    display: block;
-}
-
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    z-index: 5;
+    background-image: url('./Resources/background.png');
+    background-size: cover; /* Ensures the image covers the entire element */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
 }
 
 .overlay.active {
     display: block;
 }
-
-video, canvas {
-    max-width: 100%;
-    margin-top: 10px;
-}
 .container {
     display: flex;
-    gap: 20px;
+    gap: 0px;
 }
 .column {
     width: 300px;
@@ -156,26 +135,32 @@ th {
 
 /*Dashboard*/
 .dashboard {
-    background-color: #ccccff;
+    background-image: url('./Resources/background.png');
+    background-size: cover; /* Ensures the image covers the entire element */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+}
+
+video{
+    width: 700px;
+    height: 600px;
 }
 
 .activeCamera{
     position: fixed;       
     top: 9%;                
     left: 2%;               
-    width: 40vw;          
-    height: 50vh;         
-    background-color: #000;
+    width: 60vw;          
+    height: 65vh;         
     border: 2px solid #fff;
-    z-index: 1000;
 }
 
 .history {
     position: fixed;         
-    top: 9%;                 
+    top: 32%;                 
     right: 4%;               
-    width: 30%;             
-    height: 87vh;            
+    width: 30vw;             
+    height: 65vh;            
     background-color: #f1f1f1; 
     border: 2px solid #ccc;  
     z-index: 1000;           
@@ -183,16 +168,63 @@ th {
     overflow-y: auto;        
 }
 
+.live{
+    position: fixed;         
+    top: 9%;                 
+    right: 4%;               
+    width: 30vw;             
+    height: 20vh;            
+    background-color: #f1f1f1; 
+    border: 2px solid #ccc;  
+    z-index: 1000;           
+    border-radius: 8px;      
+    overflow-y: auto;     
+}
+
+.information{
+    position: fixed;
+    top:81%;
+    width: 60vw;
+}
 
 .account {
-    background-color: #ffffcc;
+    background-image: url('./Resources/background.png');
+    background-size: cover; /* Ensures the image covers the entire element */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
 }
 
 .group {
-    background-color: #ffccff;
+    background-image: url('./Resources/background.png');
+    background-size: cover; /* Ensures the image covers the entire element */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
 }
 
 /*General*/
-.button{
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    color: #f9f7ff; 
+    background-color: #5c6cfc;
+    border: none; 
+    border-radius: 5px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
 
+.button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Slightly larger shadow */
+    transform: translateY(-2px); /* Slight hover lift */
+}
+
+.button:active {
+    background-color: #004080; /* Even darker blue when clicked */
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); /* Reduced shadow */
+    transform: translateY(1px); /* Subtle press effect */
 }

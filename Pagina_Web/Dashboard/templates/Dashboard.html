@@ -5,7 +5,7 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="..\dashboardStyle.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="shortcut icon" type="image/x-icon" href="../Logo.png"/>
+    <link rel="shortcut icon" type="image/x-icon" href="../Resources/icon.png"/>
 </head>
 <body>
     <div class="upper-bar">
@@ -35,16 +35,6 @@
         </div>
         <!-- Registry -->
         <div class="registry block">
-            <button onclick="openModal()">Reguster someone</button>
-            <div class="overlay" id="overlay"></div>
-            <div class="modal" id="modal">
-              <h3>Capture or Upload a Photo</h3>
-              <img id="video" src="http://127.0.0.1:5000/video_feed" width="640" height="480" alt="Camera Feed">
-              <button id="capture">Capture Photo</button>
-              <input type="file" id="upload" accept="image/*">
-              <canvas id="canvas" style="display:none;"></canvas>
-              <button onclick="closeModal()">Close</button>
-          </div>
             <div class="container">
                 <div class="column">
                   <h2>Allowed</h2>
@@ -75,9 +65,17 @@
         <!-- Dashboard -->
         <div class="dashboard block active">
           <div class="activeCamera">
+              <img id="video" src="http://127.0.0.1:5000/video_feed" width="923" height="505" alt="Camera Feed">
+              <button class="button" onclick="capture()" id="capture">Capture Photo</button>
           </div>
           <div class="history">
             
+          </div>
+          <div class="live">
+
+          </div>
+          <div class="information">           
+            All users appearing on camera are being monitored in real- time by CentinelAi's intelligence system. If any issues or errors are detected, please reach out to us here for assistance.
           </div>
         </div>
         <!-- Account -->
@@ -86,8 +84,12 @@
         </div>
         <!-- Group -->
         <div class="group block">
+          <div class="createGroup">
+            <button class="button" onclick="createGroup()">Create Group</button>
+          </div>
           <div class="groupcode">
           <h2>Group Code</h2>
+          <button class="button" onclick="showCode()">Show Code</button>
           <p id="display-text" type="password"></p>
           </div>
         </div>

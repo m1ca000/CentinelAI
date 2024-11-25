@@ -84,7 +84,7 @@ const sendImageToAPI = async (imageBuffer) => {
 
   axios({
     method: "POST",
-    url: "https://classify.roboflow.com/face-recogntion-2/1",
+    url: "https://classify.roboflow.com/face-recognition-1.0/1",
     params: {
       api_key: process.env.IA_KEY
     },
