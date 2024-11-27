@@ -112,35 +112,51 @@ function showCode() {
 function captureAndSendImage(event) {
     if (event) event.preventDefault(); // Prevent page refresh
 
+    // Your existing code for capturing and sending the image
     fetch('http://127.0.0.1:5000/capture', {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        mode: 'cors'
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data);
-        if (data.status === 'success' && data.imagePath) {
-            alert('Foto capturada y guardada!');
+        console.log('Capture response:', data); // Debug: Check capture response
 
-            // Retrieve the captured image from the provided path
-            fetch(`http://127.0.0.1:5000/${data.imagePath}`)
-                .then(imageResponse => imageResponse.blob())
+        if (data.status === 'success' && data.imagePath) {
+            const imageUrl = `http://127.0.0.1:5000${data.imagePath}`;
+            console.log('Fetching image from URL:', imageUrl);
+
+            fetch(imageUrl)
+                .then(imageResponse => {
+                    if (!imageResponse.ok) {
+                        throw new Error('Image fetch failed');
+                    }
+                    return imageResponse.blob();
+                })
                 .then(blob => {
                     const formData = new FormData();
                     formData.append('image', blob, 'image.jpg');
 
-                    // Send the captured image to the remote API
                     fetch('https://centinel-ai.vercel.app/api/sendImage', {
                         method: 'POST',
-                        body: formData
+                        body: formData,
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to send image');
+                        }
+                        return response.json();
+                    })
                     .then(apiResponse => {
-                        console.log(apiResponse);
+                        console.log('API response:', apiResponse);
                         if (apiResponse.status === 'success') {
                             alert('Imagen enviada correctamente!');
-                            updateLiveDiv(apiResponse); // Update the div with the response
-
-                            // Delete the image from the local server
+                            updateLiveDiv(apiResponse);
                             deleteImage(data.imagePath);
                         } else {
                             alert('Error al enviar la imagen');
@@ -153,7 +169,7 @@ function captureAndSendImage(event) {
             alert('Error al capturar la foto');
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => console.error('Error en captura de imagen:', error));
 }
 
 function deleteImage(imagePath) {
@@ -176,31 +192,31 @@ function deleteImage(imagePath) {
 }
 
 function updateLiveDiv(apiResponse) {
-    // Select the .live div
+    // Step 5: Update the live div with the new image and information
     const liveDiv = document.querySelector('.live');
     if (!liveDiv) {
         console.error('Error: .live div not found');
         return;
     }
 
-    // Clear the contents of the .live div
+    // Clear previous contents of the live div
     liveDiv.innerHTML = '';
 
-    // Add new content based on the API response
+    // Create a new div for the person identified
     const personDiv = document.createElement('div');
     personDiv.className = 'person';
 
-    // Example: Add a text representation of the response
+    // Display the name if available
     if (apiResponse.personName) {
         personDiv.textContent = `Person identified: ${apiResponse.personName}`;
     } else {
         personDiv.textContent = 'Person not identified';
     }
 
-    // Example: If the response contains an image URL, add it
+    // If the response contains an image URL, display the image
     if (apiResponse.imageUrl) {
         const img = document.createElement('img');
-        img.src = apiResponse.imageUrl;
+        img.src = apiResponse.imageUrl; // Make sure the image URL is complete
         img.alt = 'Person Image';
         img.style.maxWidth = '100%';
         img.style.borderRadius = '8px';
@@ -208,6 +224,6 @@ function updateLiveDiv(apiResponse) {
         personDiv.appendChild(img);
     }
 
-    // Append the personDiv to the .live div
+    // Append the newly created div to the .live div
     liveDiv.appendChild(personDiv);
 }
