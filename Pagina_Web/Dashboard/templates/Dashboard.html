@@ -66,13 +66,15 @@
         <div class="dashboard block active">
           <div class="activeCamera">
               <img id="video" src="http://127.0.0.1:5000/video_feed" width="923" height="505" alt="Camera Feed">
-              <button class="button" onclick="capture()" id="capture">Capture Photo</button>
+              <form onsubmit="return false;">
+                <button id="captureButton" type="button" class="button" onclick="captureAndSendImage(event)">Capture and Send</button>
+              </form>
           </div>
           <div class="history">
             
           </div>
           <div class="live">
-
+          <div class="person"></div>
           </div>
           <div class="information">           
             All users appearing on camera are being monitored in real- time by CentinelAi's intelligence system. If any issues or errors are detected, please reach out to us here for assistance.

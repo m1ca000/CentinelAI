@@ -109,44 +109,105 @@ function showCode() {
 }
 
 //Dashboard
+function captureAndSendImage(event) {
+    if (event) event.preventDefault(); // Prevent page refresh
 
-function capture() {
-    console.log("Capture function triggered");
-
-    // Step 1: Capture the photo
     fetch('http://127.0.0.1:5000/capture', {
         method: 'POST',
     })
     .then(response => response.json())
     .then(data => {
         console.log(data);
-        if (data.status === 'success') {
+        if (data.status === 'success' && data.imagePath) {
             alert('Foto capturada y guardada!');
 
-            // Step 2: Send the captured photo to the remote API
-            const filePath = 'C:\\Users\\feder\\OneDrive\\Escritorio\\CentinelAI\\Pagina_Web\\Dashboard\\Faces\\image.jpg'; // Update with actual filename
-            const file = new File([filePath], 'image.jpg'); // Create a File object
-            
-            const formData = new FormData();
-            formData.append('image', file);
+            // Retrieve the captured image from the provided path
+            fetch(`http://127.0.0.1:5000/${data.imagePath}`)
+                .then(imageResponse => imageResponse.blob())
+                .then(blob => {
+                    const formData = new FormData();
+                    formData.append('image', blob, 'image.jpg');
 
-            fetch('https://centinel-ai.vercel.app/api/sendImage', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(apiResponse => {
-                console.log(apiResponse);
-                if (apiResponse.status === 'success') {
-                    alert('Imagen enviada correctamente!');
-                } else {
-                    alert('Error al enviar la imagen');
-                }
-            })
-            .catch(error => console.error('Error al enviar la imagen:', error));
+                    // Send the captured image to the remote API
+                    fetch('https://centinel-ai.vercel.app/api/sendImage', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(apiResponse => {
+                        console.log(apiResponse);
+                        if (apiResponse.status === 'success') {
+                            alert('Imagen enviada correctamente!');
+                            updateLiveDiv(apiResponse); // Update the div with the response
+
+                            // Delete the image from the local server
+                            deleteImage(data.imagePath);
+                        } else {
+                            alert('Error al enviar la imagen');
+                        }
+                    })
+                    .catch(error => console.error('Error al enviar la imagen:', error));
+                })
+                .catch(error => console.error('Error al obtener la imagen:', error));
         } else {
             alert('Error al capturar la foto');
         }
     })
     .catch(error => console.error('Error:', error));
+}
+
+function deleteImage(imagePath) {
+    fetch(`http://127.0.0.1:5000/delete`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ path: imagePath }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            console.log('Imagen eliminada del servidor');
+        } else {
+            console.error('Error al eliminar la imagen:', data.message);
+        }
+    })
+    .catch(error => console.error('Error en la solicitud de eliminación:', error));
+}
+
+function updateLiveDiv(apiResponse) {
+    // Select the .live div
+    const liveDiv = document.querySelector('.live');
+    if (!liveDiv) {
+        console.error('Error: .live div not found');
+        return;
+    }
+
+    // Clear the contents of the .live div
+    liveDiv.innerHTML = '';
+
+    // Add new content based on the API response
+    const personDiv = document.createElement('div');
+    personDiv.className = 'person';
+
+    // Example: Add a text representation of the response
+    if (apiResponse.personName) {
+        personDiv.textContent = `Person identified: ${apiResponse.personName}`;
+    } else {
+        personDiv.textContent = 'Person not identified';
+    }
+
+    // Example: If the response contains an image URL, add it
+    if (apiResponse.imageUrl) {
+        const img = document.createElement('img');
+        img.src = apiResponse.imageUrl;
+        img.alt = 'Person Image';
+        img.style.maxWidth = '100%';
+        img.style.borderRadius = '8px';
+
+        personDiv.appendChild(img);
+    }
+
+    // Append the personDiv to the .live div
+    liveDiv.appendChild(personDiv);
 }
