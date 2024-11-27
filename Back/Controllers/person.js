@@ -37,17 +37,15 @@ const uploadInfo = async (req, res) => {
 };
 
 const sendImageToIa = async (req, res) => {
-  console.log("Entro a la función general")
+  if (!req.file.buffer) {
+    return res.status(400).json({ error: 'No file provided' });
+  }  
   try {
-    console.log("Entro al try catch")
     const image = req.file.buffer;
     if(!image) {
       return res.status(400).json({ error: 'Falta archivo o info' });
     }
-    console.log("LLego la imagen")
-
     const resultFromIa = await personServices.sendImageToAPI(image);
-    console.log("Se ejecuto la función de la IA")
     return res.status(201).json({ message: 'Imagen procesada con exito', data: resultFromIa });
   }
   catch(err) {
