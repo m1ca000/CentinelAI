@@ -10,7 +10,7 @@ const PORT = 8000
 
 // Configuración multer
 const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
 // Middlewares
 const corsOptions = {

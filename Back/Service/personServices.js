@@ -76,10 +76,8 @@ const existingPerson = async (name, surname, DNI, group) => {
 }
 
 const sendImageToAPI = async (imageBuffer) => {
-  console.log("Entro a la función")
   // Leer la imagen y convertirla a base64
   const imageBase64 = imageBuffer.toString("base64");
-  console.log("Leyo la imagen y la convirtio");
   // Hacer la solicitud a la API
 
   axios({
