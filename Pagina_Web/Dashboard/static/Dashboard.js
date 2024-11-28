@@ -2,6 +2,8 @@ const items = document.querySelectorAll('.upper-bar li');
 const blocks = document.querySelectorAll('.block');
 let activeBlock = document.querySelector('.block.active');
 
+const sendImage = "https://centinel-ai.vercel.app/api/sendImage";
+
 items.forEach(item => {
     item.addEventListener('click', function() {
         items.forEach(i => i.classList.remove('active'));
@@ -36,13 +38,13 @@ items.forEach(item => {
 });
 
 //Camera
-document.querySelector('.move-0').addEventListener('click', () => sendValue(0, 'angle'));
-document.querySelector('.move-45').addEventListener('click', () => sendValue(45, 'angle'));
-document.querySelector('.move-90').addEventListener('click', () => sendValue(90, 'angle'));
-document.querySelector('.move-135').addEventListener('click', () => sendValue(135, 'angle'));
-document.querySelector('.move-180').addEventListener('click', () => sendValue(180, 'angle'));
+document.querySelector('#move-0').addEventListener('click', () => sendValue(0, 'angle'));
+document.querySelector('#move-45').addEventListener('click', () => sendValue(45, 'angle'));
+document.querySelector('#move-90').addEventListener('click', () => sendValue(90, 'angle'));
+document.querySelector('#move-135').addEventListener('click', () => sendValue(135, 'angle'));
+document.querySelector('#move-180').addEventListener('click', () => sendValue(180, 'angle'));
 
-document.querySelector('.unlock').addEventListener('click', () => sendValue(300, 'unlock'));
+document.querySelector('#unlock').addEventListener('click', () => sendValue(300, 'unlock'));
 
 function sendValue(value, type) {
     let bodyData = {};
@@ -109,18 +111,46 @@ function showCode() {
 }
 
 //Dashboard
-function captureAndSendImage(event) {
-    if (event) event.preventDefault(); // Prevent page refresh
 
-    // Your existing code for capturing and sending the image
+function recognizedPerson(type, value){
+    let bodyData = {};
+    bodyData[type] = value;
+
+    fetch('http://192.168.82.177/set_angle', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(bodyData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
+function unrecognizedPerson(){
+    alert("Unrecognized person detected! Taking necessary actions.");
+}
+
+function Capture(){
     fetch('http://127.0.0.1:5000/capture', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        mode: 'cors'
+        mode: 'cors' // Ensure CORS mode is set
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Capture request failed with status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
         console.log('Capture response:', data); // Debug: Check capture response
 
@@ -128,67 +158,113 @@ function captureAndSendImage(event) {
             const imageUrl = `http://127.0.0.1:5000${data.imagePath}`;
             console.log('Fetching image from URL:', imageUrl);
 
-            fetch(imageUrl)
+            // Fetch the image as a blob
+            return fetch(imageUrl)
                 .then(imageResponse => {
                     if (!imageResponse.ok) {
                         throw new Error('Image fetch failed');
                     }
-                    return imageResponse.blob();
-                })
-                .then(blob => {
-                    const formData = new FormData();
-                    formData.append('image', blob, 'image.jpg');
-
-                    fetch('https://centinel-ai.vercel.app/api/sendImage', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem('token')}`
-                        }
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to send image');
-                        }
-                        return response.json();
-                    })
-                    .then(apiResponse => {
-                        console.log('API response:', apiResponse);
-                        if (apiResponse.status === 'success') {
-                            alert('Imagen enviada correctamente!');
-                            updateLiveDiv(apiResponse);
-                            deleteImage(data.imagePath);
-                        } else {
-                            alert('Error al enviar la imagen');
-                        }
-                    })
-                    .catch(error => console.error('Error al enviar la imagen:', error));
-                })
-                .catch(error => console.error('Error al obtener la imagen:', error));
+                    return imageResponse.blob(); // Return the blob
+                });
         } else {
             alert('Error al capturar la foto');
+            throw new Error('Image path not found in response');
         }
     })
-    .catch(error => console.error('Error en captura de imagen:', error));
 }
 
-function deleteImage(imagePath) {
-    fetch(`http://127.0.0.1:5000/delete`, {
-        method: 'DELETE',
+//Not Working Dashboard
+function captureAndSendImage(event) {
+    if (event) event.preventDefault(); // Prevent page refresh
+
+    // Capture the photo and send it to the server
+    fetch('http://127.0.0.1:5000/capture', {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ path: imagePath }),
+        mode: 'cors' // Ensure CORS mode is set
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Capture request failed with status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('Capture response:', data); // Debug: Check capture response
+
+        if (data.status === 'success' && data.imagePath) {
+            const imageUrl = `http://127.0.0.1:5000${data.imagePath}`;
+            console.log('Fetching image from URL:', imageUrl);
+
+            // Fetch the image as a blob
+            return fetch(imageUrl)
+                .then(imageResponse => {
+                    if (!imageResponse.ok) {
+                        throw new Error('Image fetch failed');
+                    }
+                    return imageResponse.blob(); // Return the blob
+                });
+        } else {
+            alert('Error al capturar la foto');
+            throw new Error('Image path not found in response');
+        }
+    })
+    .then(blob => { // Here is where we receive the blob
+        const formData = new FormData();
+        formData.append('image', blob, 'image.jpg');
+
+        return fetch(sendImage, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            mode: 'cors' // Ensure CORS mode is set
+        });
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to send image');
+        }
+        return response.json();
+    })
+    .then(apiResponse => {
+        console.log('API response:', apiResponse);
+        if (apiResponse.status === 'success') {
+            alert('Imagen enviada correctamente!');
+            updateLiveDiv(apiResponse);
+            deleteImage(data.imagePath);
+        } else {
+            alert('ALAHUALA');
+        }
+    })
+    .catch(error => {
+        console.error('Error en enviar de imagen:', error.message || error);
+        console.error('Error details:', error.message);
+    });
+}
+
+async function deleteImage(imagePath) {
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/delete`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ path: imagePath }),
+        });
+
+        const data = await response.json();
         if (data.status === 'success') {
             console.log('Imagen eliminada del servidor');
         } else {
             console.error('Error al eliminar la imagen:', data.message);
         }
-    })
-    .catch(error => console.error('Error en la solicitud de eliminación:', error));
+    } catch (error) {
+        console.error('Error en la solicitud de eliminación:', error);
+    }
 }
 
 function updateLiveDiv(apiResponse) {

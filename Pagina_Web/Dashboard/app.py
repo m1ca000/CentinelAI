@@ -2,6 +2,7 @@ import logging
 from flask import Flask, render_template, Response, request, jsonify, send_from_directory
 from flask_cors import CORS  # Import CORS
 import os
+import signal
 import cv2
 import imutils
 import glob
@@ -125,6 +126,26 @@ def upload_image():
 @app.route('/')
 def index():
     return render_template('Dashboard.html')
+
+@app.route('/delete', methods=['DELETE'])
+def delete_image():
+    try:
+        data = request.get_json()
+        image_path = data.get('path')
+        if not image_path:
+            return jsonify({"status": "error", "message": "No image path provided"}), 400
+
+        image_location = os.path.join(faces_dir, image_path.strip('/Faces/'))
+        if os.path.exists(image_location):
+            os.remove(image_location)
+            logging.info(f'Image deleted: {image_location}')
+            return jsonify({"status": "success", "message": "Image deleted"}), 200
+        else:
+            logging.error(f"Image not found: {image_location}")
+            return jsonify({"status": "error", "message": "Image not found"}), 404
+    except Exception as e:
+        logging.error(f"Error deleting image: {e}")
+        return jsonify({"status": "error", "message": "An error occurred during image deletion"}), 500
 
 if __name__ == '__main__':
     # Disable Flask's reloader for better error logging visibility

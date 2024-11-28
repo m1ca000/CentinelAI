@@ -1,3 +1,4 @@
 {
-    "liveServer.settings.multiRootWorkspaceName": "CentinelAI"
+    "liveServer.settings.multiRootWorkspaceName": "CentinelAI",
+    "CodeGPT.apiKey": "CodeGPT Plus Beta"
 }
